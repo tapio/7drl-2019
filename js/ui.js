@@ -9,7 +9,6 @@ function UI(player) {
 	this.pressed = [];
 	this.shopItems = [];
 	this.characterChoice = null;
-	this.characterPerk = null;
 	this.dom = {
 		fps: $("#fps"),
 		depth: $("#depth"),
