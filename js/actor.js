@@ -35,7 +35,6 @@ function Actor(x, y, def) {
 	this.stats = {
 		turns: 0,
 		kills: 0,
-		perks: 0,
 		gems: 0,
 		coins: 0
 	};

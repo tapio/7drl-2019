@@ -117,7 +117,6 @@ function UI(player) {
 			var item = ui.shopItems[chosenElem.dataset.index];
 			if (item && item.canGet(ui.actor)) {
 				item.get(ui.actor);
-				ui.actor.stats.perks++;
 				ui.msg("The gods granted you " + item.name + "!", ui.actor, "feat");
 				ui.snd("powerup", ui.actor);
 				ui.shopItems = [];
@@ -373,7 +372,6 @@ UI.prototype.die = function() {
 	$("#death-depth").innerHTML = Math.round(world.dungeon.id);
 	$("#death-coins").innerHTML = Math.round(stats.coins);
 	$("#death-gems").innerHTML = Math.round(stats.gems);
-	$("#death-perks").innerHTML = Math.round(stats.perks);
 	$("#death").style.display = "block";
 	world.running = false;
 };
@@ -385,7 +383,6 @@ UI.prototype.win = function() {
 	$("#win-depth").innerHTML = Math.round(world.dungeon.id);
 	$("#win-coins").innerHTML = Math.round(stats.coins);
 	$("#win-gems").innerHTML = Math.round(stats.gems);
-	$("#win-perks").innerHTML = Math.round(stats.perks);
 	$("#win").style.display = "block";
 	world.running = false;
 };
@@ -414,10 +411,6 @@ UI.prototype.updateShopScreen = function() {
 	$("#shop-details").innerHTML = "The gods will offer you one favor in exchange for a sacrifice.";
 
 	this.shopItems = [];
-	for (var i = 0; i < PERKS.length; ++i) {
-		if (PERKS[i].isAvailable(ui.actor))
-			this.shopItems.push(PERKS[i]);
-	}
 	shuffle(this.shopItems);
 	if (this.shopItems.length > 3)
 		this.shopItems.length = 3;
