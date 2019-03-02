@@ -286,7 +286,7 @@ var TILES = {
 	},
 	gem: {
 		tileCoords: [ 11, 9 ], walkable: true, transparent: true,
-		desc: "A pretty gem, can be sacrificed on altars"
+		desc: "A pretty gem"
 	},
 	ring: {
 		tileCoords: [ 14, 9 ], walkable: true, transparent: true,

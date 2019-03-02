@@ -13,10 +13,7 @@ function UI(player) {
 	this.dom = {
 		fps: $("#fps"),
 		depth: $("#depth"),
-		health: $("#health"),
-		gems: $("#gems"),
 		coins: $("#coins"),
-		keys: $("#keys"),
 		messages: $("#messages")
 	};
 	// Load settings
@@ -322,10 +319,7 @@ UI.prototype.update = function() {
 		return;
 
 	this.dom.depth.innerHTML = world.dungeon.id;
-	this.dom.health.innerHTML = this.actor.health;
-	this.dom.gems.innerHTML = this.actor.gems;
 	this.dom.coins.innerHTML = this.actor.coins;
-	this.dom.keys.innerHTML = this.actor.keys;
 
 	if (!CONFIG.touch) {
 		var cursor = "default";
@@ -371,7 +365,6 @@ UI.prototype.die = function() {
 	$("#death-kills").innerHTML = Math.round(stats.kills);
 	$("#death-depth").innerHTML = Math.round(world.dungeon.id);
 	$("#death-coins").innerHTML = Math.round(stats.coins);
-	$("#death-gems").innerHTML = Math.round(stats.gems);
 	$("#death").style.display = "block";
 	world.running = false;
 };
@@ -382,7 +375,6 @@ UI.prototype.win = function() {
 	$("#win-kills").innerHTML = Math.round(stats.kills);
 	$("#win-depth").innerHTML = Math.round(world.dungeon.id);
 	$("#win-coins").innerHTML = Math.round(stats.coins);
-	$("#win-gems").innerHTML = Math.round(stats.gems);
 	$("#win").style.display = "block";
 	world.running = false;
 };
@@ -407,7 +399,6 @@ UI.prototype.updateShopScreen = function() {
 	itemsElem.innerHTML = "";
 	$("#shop-health").innerHTML = ui.actor.health + "/" + ui.actor.maxHealth;
 	$("#shop-coins").innerHTML = ui.actor.coins;
-	$("#shop-gems").innerHTML = ui.actor.gems;
 	$("#shop-details").innerHTML = "The gods will offer you one favor in exchange for a sacrifice.";
 
 	this.shopItems = [];
