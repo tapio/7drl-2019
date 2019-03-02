@@ -65,7 +65,7 @@ Actor.prototype.visibility = function(x, y) {
 	return this.fov[x + y * world.dungeon.width];*/
 };
 
-Actor.prototype.updateVisibility = function(actor) {
+Actor.prototype.updateVisibility = function() {
 	/*if (this.fov.length != world.dungeon.map[0].length)
 		this.fov = new Array(world.dungeon.width * world.dungeon.height);
 	for (var i = 0, l = this.fov.length; i < l; ++i)
@@ -89,7 +89,12 @@ Actor.prototype.moveTo = function(x, y) {
 		return true;
 	}
 	if (!world.dungeon.getPassable(x, y)) return false;
-	return world.dungeon.findPath(x, y, this);
+	if (world.dungeon.findPath(x, y, this)) {
+		if (this.client)
+			this.client.update();
+		return true;
+	}
+	return false;
 };
 
 Actor.prototype.move = function(dx, dy) {

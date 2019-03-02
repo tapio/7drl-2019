@@ -7,8 +7,8 @@ var CONFIG = {
 	playerMoveDuration: 130,
 	enemyMoveDuration: 100,
 	animFrameDuration: 64,
-	// Not really correct/reliable, but detecting touch screen is currently impossible
-	touch: (/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent))
+	server: typeof window === "undefined",
+	touch: typeof navigator !== "undefined" && (/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent))
 };
 
 // User settings, saved to localStorage
@@ -355,11 +355,13 @@ var TILES = {
 };
 
 (function() {
-	TILES.tileset = document.createElement("img");
-	TILES.tileset.src = "assets/tileset.png";
+	if (!CONFIG.server) {
+		TILES.tileset = document.createElement("img");
+		TILES.tileset.src = "assets/tileset.png";
+	}
 	for (var i in TILES) {
 		var tile = TILES[i];
-		if (!tile.tileCoords) continue;
+		if (!tile || !tile.tileCoords) continue;
 		tile.id = i;
 		tile.name = tile.name || i;
 		tile.name = tile.name[0].toUpperCase() + tile.name.substr(1);
@@ -471,6 +473,8 @@ var SOUNDS = {
 };
 
 (function() {
+	if (CONFIG.server)
+		return;
 	var format = ".ogg";
 	if (document.createElement("audio").canPlayType("audio/mp3"))
 		format = ".mp3";

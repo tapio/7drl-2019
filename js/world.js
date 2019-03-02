@@ -35,6 +35,8 @@ World.prototype.create = function() {
 	};
 	var pl = new Actor(this.dungeon.start[0], this.dungeon.start[1], def);
 	pl.updateVisibility();
+	var gameName = window.location.search.substring(1);
+	pl.client = new Client(pl, null, gameName);
 	this.dungeon.actors.push(pl);
 	this.dungeon.update();
 	this.resetScheduler();

@@ -42,6 +42,67 @@ Dungeon.LAYER_ACTOR = 3;
 Dungeon.LAYER_COUNT = 4;
 Dungeon.totalCount = 0;
 
+Dungeon.prototype.serialize = function() {
+	var layersToSend = Dungeon.LAYER_STATIC + 1;
+	var ret = {
+		w: this.width,
+		h: this.height,
+		items: [],
+		map: new Array(layersToSend)
+	};
+	for (var i = 0; i < layersToSend; ++i)
+		ret.map[i] = new Array(this.width * this.height);
+	for (var i = 0, l = this.width * this.height; i < l; ++i) {
+		for (var layer = 0; layer < layersToSend; ++layer) {
+			var tile = this.map[layer][i];
+			ret.map[layer][i] = tile ? tile.id : 0;
+		}
+	}
+	//for (var i = 0, l = this.items.length; i < l; ++i)
+	//	ret.items.push({ id: this.items[i].id, pos: this.items[i].pos });
+	return ret;
+};
+
+Dungeon.prototype.deserialize = function(data) {
+	this.width = data.w;
+	this.height = data.h;
+	for (var i = 0; i < Dungeon.LAYER_COUNT; ++i)
+		this.map[i] = new Array(this.width * this.height);
+	for (var i = 0, l = this.width * this.height; i < l; ++i) {
+		this.map[Dungeon.LAYER_BG][i] = TILES[data.map[Dungeon.LAYER_BG][i]];
+		if (data.map[Dungeon.LAYER_STATIC][i])
+			this.map[Dungeon.LAYER_STATIC][i] = TILES[data.map[Dungeon.LAYER_STATIC][i]];
+		//if (data.map[Dungeon.LAYER_ITEM][i])
+		//	this.map[Dungeon.LAYER_ITEM][i] = TILES[data.map[Dungeon.LAYER_ITEM][i]];
+	}
+	/*for (var i = 0, l = data.items.length; i < l; ++i) {
+		var itemSpec = data.items[i];
+		var item = clone(TILES[itemSpec.id]);
+		item.pos = itemSpec.pos;
+		this.setTile(item.pos[0], item.pos[1], item, Dungeon.LAYER_ITEM);
+		this.items.push(item);
+	}*/
+	this.needsRender = true;
+};
+
+Dungeon.prototype.findById = function(id) {
+	for (var i = 0, l = this.actors.length; i < l; ++i)
+		if (this.actors[i].id == id)
+			return this.actors[i];
+	return null;
+};
+
+Dungeon.prototype.removeById = function(id) {
+	for (var i = 0, l = this.actors.length; i < l; ++i)
+		if (this.actors[i].id == id)
+			return this.actors.splice(i, 1);
+};
+
+Dungeon.prototype.removeItem = function(item) {
+	removeElem(this.items, item);
+	this.setTile(item.pos[0], item.pos[1], null, Dungeon.LAYER_ITEM);
+};
+
 Dungeon.prototype.getTile = function(x, y, layer) {
 	if (x < 0 || y < 0 || x >= this.width || y >= this.height) return TILES.empty;
 	if (layer !== undefined)
