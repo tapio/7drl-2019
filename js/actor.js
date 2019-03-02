@@ -142,7 +142,6 @@ Actor.prototype.doPath = function(checkItems, checkMapChange) {
 		if (object) {
 			if (this == ui.actor && object.shop && this.path.length === 0) {
 				ui.openShop();
-				world.dungeon.setTile(waypoint[0], waypoint[1], "altar_used", Dungeon.LAYER_STATIC);
 				this.path = [];
 				return true;
 			} else if (object.id == "door_wood") {
