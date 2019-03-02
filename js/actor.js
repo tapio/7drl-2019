@@ -51,7 +51,8 @@ Actor.prototype.visibility = function(x, y) {
 	var dungeon = world.dungeon;
 	if (x < 0 || y < 0 || x >= dungeon.width || y >= dungeon.height)
 		return false;
-	if (this.clairvoyant) {
+	return true;
+	/*if (this.clairvoyant) {
 		if (x == dungeon.start[0] && y == dungeon.start[1])
 			return 1;
 		if (x == dungeon.end[0] && y == dungeon.end[1])
@@ -61,11 +62,11 @@ Actor.prototype.visibility = function(x, y) {
 		var monster = dungeon.getTile(x, y, Dungeon.LAYER_ACTOR);
 		if (monster) return 1;
 	}
-	return this.fov[x + y * world.dungeon.width];
+	return this.fov[x + y * world.dungeon.width];*/
 };
 
 Actor.prototype.updateVisibility = function(actor) {
-	if (this.fov.length != world.dungeon.map[0].length)
+	/*if (this.fov.length != world.dungeon.map[0].length)
 		this.fov = new Array(world.dungeon.width * world.dungeon.height);
 	for (var i = 0, l = this.fov.length; i < l; ++i)
 		if (this.fov[i] == 1) this.fov[i] = 0.5;
@@ -77,7 +78,7 @@ Actor.prototype.updateVisibility = function(actor) {
 			this.fov[x + y * world.dungeon.width] = 1;
 	}
 	var fov = new ROT.FOV.PreciseShadowcasting(world.dungeon.getTransparent.bind(world.dungeon));
-	fov.compute(this.pos[0], this.pos[1], this.vision, callback.bind(this));
+	fov.compute(this.pos[0], this.pos[1], this.vision, callback.bind(this));*/
 };
 
 Actor.prototype.moveTo = function(x, y) {
