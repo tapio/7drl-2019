@@ -484,7 +484,7 @@ var LEVELS = [
 	{
 		name: "Inn",
 		desc: "The Pranching Pony",
-		generator: "arena",
+		generator: "inn",
 		width: 20,
 		height: 15,
 		wallOnStaticLayer: true,
@@ -499,7 +499,7 @@ var LEVELS = [
 	},{
 		name: "Inn",
 		desc: "The Pranching Pony",
-		generator: "arena",
+		generator: "inn",
 		width: 20,
 		height: 15,
 		wallOnStaticLayer: true,

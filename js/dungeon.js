@@ -10,10 +10,7 @@ function Dungeon(id, params) {
 	this.start = [0, 0];
 	this.end = [0, 0];
 	var generators = {
-		arena: this.generateArena.bind(this),
-		dungeon: this.generateDungeon.bind(this),
-		cave: this.generateCave.bind(this),
-		maze: this.generateMaze.bind(this)
+		inn: this.generateInn.bind(this),
 	};
 	Dungeon.totalCount++;
 	var freeTiles = generators[params.generator](params);
@@ -31,10 +28,10 @@ function Dungeon(id, params) {
 		}
 		this.setTile(pos[0], pos[1], params.decor.random(), Dungeon.LAYER_STATIC);
 	}
-	if (LEVELS[id+1])
-		this.generateStairs(this.end, TILES.stairs_down, LEVELS[id+1]);
-	else this.generateStairs(this.end, TILES.ring, { id: "WIN" });
-	this.generateStairs(this.start, TILES.stairs_up, LEVELS[id-1]);
+	//if (LEVELS[id+1])
+	//	this.generateStairs(this.end, TILES.stairs_down, LEVELS[id+1]);
+	//else this.generateStairs(this.end, TILES.ring, { id: "WIN" });
+	//this.generateStairs(this.start, TILES.stairs_up, LEVELS[id-1]);
 	this.needsRender = true;
 }
 
