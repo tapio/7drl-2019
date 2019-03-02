@@ -52,9 +52,22 @@ Dungeon.prototype.generateInn = function(params) {
 		//wall = wall || ((x <= 1 || y <= 1 || x >= this.width-2 || y >= this.height-2) && Math.random() < 0.667);
 		//wall = wall || ((x <= 2 || y <= 2 || x >= this.width-3 || y >= this.height-3) && Math.random() < 0.333);
 		this.setTile(x, y, params.floor.random(), Dungeon.LAYER_BG);
-		if (wall)
+		if (wall) {
 			this.setTile(x, y, params.wall.random(), wallLayer);
-		else
+			return;
+		}
+		// Bar counter
+		if (x == 3 && y > 3 && y < this.height - 4) {
+			this.setTile(x, y, params.counter.random(), Dungeon.LAYER_STATIC);
+			return;
+		}
+		// Tables
+		if (x > 5 && x < this.width - 3 && (x % 3) == 0 && y > 2 && y < this.height - 3 && (y % 3) == 1) {
+			this.setTile(x, y, params.counter.random(), Dungeon.LAYER_STATIC);
+			return;
+		}
+		// By the wall decor
+		if (y == 1 || y == this.height - 2)
 			freeTiles.push([x, y]);
 	}).bind(this));
 	shuffle(freeTiles);
