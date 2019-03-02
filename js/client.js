@@ -15,6 +15,7 @@ function Client(actor, host, game) {
 
 	this.socket.onopen = (function() {
 		ui.msg("Connection established!");
+		this.send({ type: "create", game: game || "testgame", data: world.dungeon.serialize() });
 		this.send({ type: "join", game: game || "testgame" });
 		this.connected = true;
 		pingInterval = window.setInterval((function() {
@@ -30,10 +31,10 @@ function Client(actor, host, game) {
 		switch (msg.type) {
 			case "join":
 				this.actor.id = msg.player.id;
-				this.actor.pos[0] = msg.player.pos[0];
-				this.actor.pos[1] = msg.player.pos[1];
+				//this.actor.pos[0] = msg.player.pos[0];
+				//this.actor.pos[1] = msg.player.pos[1];
 				this.actor.fov = [];
-				dungeon.deserialize(msg.map);
+				dungeon.deserialize(msg.data);
 				this.actor.updateVisibility();
 				this.playing = true;
 				break;
