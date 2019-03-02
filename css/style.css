@@ -64,12 +64,12 @@ body {
 canvas {
 	position: absolute;
 	z-index: -1;
-    image-rendering: optimizeSpeed;
-    image-rendering: -moz-crisp-edges;
-    image-rendering: -webkit-optimize-contrast;
-    image-rendering: -o-crisp-edges;
-    image-rendering: pixelated;
-    -ms-interpolation-mode: nearest-neighbor;
+	image-rendering: optimizeSpeed;
+	image-rendering: -moz-crisp-edges;
+	image-rendering: -webkit-optimize-contrast;
+	image-rendering: -o-crisp-edges;
+	image-rendering: pixelated;
+	-ms-interpolation-mode: nearest-neighbor;
 }
 
 #error {
@@ -190,7 +190,7 @@ h1 {
 	padding-left: 20px;
 	padding-right: 20px;
 	font-size: 20px;
-	width: 180px;
+	width: 200px;
 }
 
 .btn-compact {

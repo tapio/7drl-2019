@@ -133,9 +133,9 @@ function UI(player) {
 	var handleHash = (function() {
 		var hash = window.location.hash;
 		closeAllMenus();
-		var whitelist = [ "#new", "#help", "#about" ];
+		var whitelist = [ "#main", "#new", "#help", "#about" ];
 		if (hash.length < 2 || (whitelist.indexOf(hash) == -1 && this.characterChoice === null)) {
-			window.location.hash = "#new";
+			window.location.hash = "#main";
 			return;
 		}
 		if (hash == "#shop" && !this.shopItems.length) {
