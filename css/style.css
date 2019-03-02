@@ -142,10 +142,10 @@ h1 {
 	margin: 4px;
 	text-align: center;
 	vertical-align: middle;
-	color: #bbb;
-	background-color: #222;
+	color: #210;
 	cursor: pointer;
-	border: 1px solid black;
+	border-image: url('../assets/ui/brown.png') 16 fill repeat;
+	border-image-width: 16px;
 	text-decoration: none;
 	-webkit-tap-highlight-color: rgba(0, 0, 0, 0);
 	-webkit-touch-callout: none;
@@ -156,29 +156,23 @@ h1 {
 }
 
 .btn-selected {
-	border: 1px solid white;
+	border-image: url('../assets/ui/tan_pressed.png') 16 fill repeat;
+	border-image-width: 16px;
 }
 
 .btn-no-touch:hover {
-	/*border: 1px solid white;*/
-	-webkit-transform: scale(1.1);
-	-moz-transform: scale(1.1);
-	-ms-transform: scale(1.1);
-	-o-transform: scale(1.1);
-	transform: scale(1.1);
+	border-image: url('../assets/ui/tan.png') 16 fill repeat;
+	border-image-width: 16px;
 }
 
 .btn:active {
-	-webkit-transform: scale(0.85);
-	-moz-transform: scale(0.85);
-	-ms-transform: scale(0.85);
-	-o-transform: scale(0.85);
-	transform: scale(0.85);
+	border-image: url('../assets/ui/tan_pressed.png') 16 fill repeat;
+	border-image-width: 16px;
 }
 
 .btn-disabled {
 	pointer-events: none;
-	color: #444 !important;
+	color: #666 !important;
 }
 
 .btn-square {
