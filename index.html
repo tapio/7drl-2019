@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Inn Keeper</title>
+	<link rel="shortcut icon" href="favicon.png" />
+	<link rel="icon" sizes="128x128" href="icon.png">
+	<link rel="apple-touch-icon" sizes="128x128" href="icon.png">
+	<link href="css/style.css" rel="stylesheet"/>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
+	<meta name="mobile-web-app-capable" content="yes">
+	<meta name="apple-mobile-web-app-capable" content="yes">
+	<meta name="apple-mobile-web-app-status-bar-style" content="black">
+	<meta name="theme-color" content="#111111">
+</head>
+<body>
+
+	<div id="error"></div>
+	<div id="debug">
+		Fps:  <span id="fps"></span><br/>
+		Upd:  <span id="time-update"></span><br/>
+		Draw:  <span id="time-render"></span><br/>
+		UI:  <span id="time-ui"></span>
+	</div>
+	<a href="#menu" id="menu-open" class="btn btn-square" title="Menu">≡</a>
+	<div id="menu" class="modal">
+		<div class="menu">
+			<a href="#game" class="btn btn-square right">✕</a>
+			<h1>Menu</h1>
+			<div class="center">
+				<a href="#help" class="btn btn-text">Help</a>
+				<div id="pausemenu-fullscreen" class="btn btn-text">Fullscreen</div>
+				<div id="pausemenu-tilesize" class="btn btn-text">Tile Size</div>
+				<div id="pausemenu-sounds" class="btn btn-text">Sounds</div>
+				<div id="pausemenu-vibration" class="btn btn-text">Vibration</div>
+				<div id="pausemenu-restart" class="btn btn-text">Restart</div>
+				<a href="#about" class="btn btn-text">About</a>
+			</div>
+			<p class="footer">Copyright &copy; 2019 Tapio Vierros</p>
+		</div>
+	</div>
+	<div id="status">
+		<div class="sprite depth"></div> <span id="depth"></span><br/>
+		<div class="sprite heart"></div> <span id="health"></span><br/>
+		<div class="sprite gem"></div> <span id="gems"></span><br/>
+		<div class="sprite coin"></div> <span id="coins"></span><br/>
+		<div class="sprite key"></div> <span id="keys"></span><br/>
+	</div>
+	<div id="messages"></div>
+
+	<div id="new" class="modal">
+		<div class="menu">
+			<h1>Choose Your Character</h1>
+			<div id="new-male" class="btn btn-square"><div class="sprite sprite2x male"></div></div>
+			<div id="new-female" class="btn btn-square"><div class="sprite sprite2x female"></div></div>
+			<div>
+				<a href="#game" id="new-ok" class="btn btn-text btn-disabled">Let's Go</a>
+				<div id="new-fullscreen" class="btn btn-text">Fullscreen</div>
+			</div>
+			<div>
+				<a href="#help" class="btn btn-text">Instructions</a>
+				<a href="#about" class="btn btn-text">About</a>
+			</div>
+		</div>
+	</div>
+	<div id="about" class="modal">
+		<div class="menu">
+			<div class="btn btn-square right back">✕</div>
+			<h1>About</h1>
+			<p><strong>For bugs and feedback, you can create a
+			<a href="https://github.com/tapio/7drl-2019">GitHub issue.</a></strong></p>
+			<p>This game was created by Tapio Vierros for the 2019
+			<a href="http://www.roguebasin.com/index.php?title=Seven_Day_Roguelike_Challenge">Seven Day Roguelike Challenge</a>,
+			with the aid of <a href="http://ondras.github.io/rot.js/hp/">rot.js</a> library and
+			lots of code reuse from my previous 7DRL, <a href="http://tapiov.net/7drl-2016">Fantastic Dungeons.</a></p>
+		</div>
+	</div>
+	<div id="help" class="modal">
+		<div class="menu">
+			<div class="btn btn-square right back">✕</div>
+			<h1>Instructions</h1>
+			<p>Navigate by clicking/touching the tile where you want to go.
+			You can also use the keyboard (arrows, numpad, Vi-keys).
+			Bump into stuff to interact.
+			Right click/long press prints info on things in the world.</p>
+			<p>During play, you can access settings - such as fullscreen and sound toggles -
+			from the upper right corner of the screen.</p>
+		</div>
+	</div>
+	<div id="shop" class="modal">
+		<div class="menu">
+			<a href="#game" class="btn btn-square right">✕</a>
+			<h1>Altar of Ascension</h1>
+			<div class="right">
+				<span class="sprite heart"></span> <span id="shop-health"></span><br/>
+				<span class="sprite gem"></span> <span id="shop-gems"></span><br/>
+				<span class="sprite coin"></span> <span id="shop-coins"></span>
+			</div>
+			<div id="shop-items"></div>
+			<p id="shop-details"></p>
+			<div id="shop-actions">
+				<div id="shop-ok" class="btn btn-text">Sacrifice</div>
+				<a href="#game" class="btn btn-text">Decline</a>
+			</div>
+		</div>
+	</div>
+
+	<div id="death" class="modal">
+		<div class="menu">
+			<h1>You Have Died!</h1>
+			<p>Before your demise on level <span id="death-depth"></span>,
+			you managed to kill <span id="death-kills"></span> creatures
+			and survive for <span id="death-turns"></span> turns.</p>
+			<p>During your journey you collected <span id="death-coins"></span>
+			coins and <span id="death-gems"></span> gems.
+			You sacrificed to gods <span id="death-perks"></span> times.</p>
+			<div>
+				<div id="death-restart" class="btn btn-text">Restart</div>
+			</div>
+		</div>
+	</div>
+
+	<div id="win" class="modal">
+		<div class="menu">
+			<h1>Glorious Victory!</h1>
+			<p>After <span id="win-turns"></span> turns your adventure
+			ended in triumph at dungeon depth <span id="win-depth"></span>.
+			Before that, you slaughtered <span id="win-kills"></span> creatures
+			and collected <span id="win-coins"></span> coins and
+			<span id="win-gems"></span> gems.
+			You made <span id="win-perks"></span> sacrifices to gods.</p>
+			<div>
+				<div id="win-restart" class="btn btn-text">Again!</div>
+			</div>
+		</div>
+	</div>
+
+	<script src="libs/rot.min.js"></script>
+	<script src="js/utils.js"></script>
+	<script src="js/data.js"></script>
+	<script src="js/ui.js"></script>
+	<script src="js/actor.js"></script>
+	<script src="js/dungeon.js"></script>
+	<script src="js/mapgen.js"></script>
+	<script src="js/world.js"></script>
+	<script src="js/main.js"></script>
+</body>
+</html>
