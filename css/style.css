@@ -284,10 +284,6 @@ h1 {
 .male { background-position: calc(-16px * 24) calc(-16px * 0); }
 .female { background-position: calc(-16px * 27) calc(-16px * 0); }
 
-#shop-details {
-	max-width: 400px;
-}
-
 @keyframes tada {
 	from {
 		-webkit-transform: scale3d(1, 1, 1);

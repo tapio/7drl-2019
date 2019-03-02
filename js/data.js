@@ -269,7 +269,7 @@ var TILES = {
 	altar: {
 		tileCoords: [ 8, 7 ], walkable: true, transparent: true,
 		desc: "Gods offer favors for sacrifices on this altar",
-		anim: [ [ 8, 7 ], [ 9, 7 ], [ 10, 7 ] ], shop: true
+		anim: [ [ 8, 7 ], [ 9, 7 ], [ 10, 7 ] ]
 	},
 	altar_used: {
 		tileCoords: [ 8, 6 ], walkable: true, transparent: true,
