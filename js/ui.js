@@ -374,7 +374,7 @@ UI.prototype.update = function() {
 		return;
 
 	this.dom.depth.innerHTML = world.dungeon.id;
-	this.dom.coins.innerHTML = this.actor.coins;
+	//this.dom.coins.innerHTML = this.actor.coins;
 
 	if (!CONFIG.touch) {
 		var cursor = "default";
@@ -418,8 +418,8 @@ UI.prototype.die = function() {
 	var stats = ui.actor.stats;
 	$("#death-turns").innerHTML = Math.round(stats.turns);
 	$("#death-kills").innerHTML = Math.round(stats.kills);
-	$("#death-depth").innerHTML = Math.round(world.dungeon.id);
-	$("#death-coins").innerHTML = Math.round(stats.coins);
+	//$("#death-depth").innerHTML = Math.round(world.dungeon.id);
+	//$("#death-coins").innerHTML = Math.round(stats.coins);
 	$("#death").style.display = "block";
 	world.running = false;
 };
@@ -428,8 +428,8 @@ UI.prototype.win = function() {
 	var stats = ui.actor.stats;
 	$("#win-turns").innerHTML = Math.round(stats.turns);
 	$("#win-kills").innerHTML = Math.round(stats.kills);
-	$("#win-depth").innerHTML = Math.round(world.dungeon.id);
-	$("#win-coins").innerHTML = Math.round(stats.coins);
+	//$("#win-depth").innerHTML = Math.round(world.dungeon.id);
+	//$("#win-coins").innerHTML = Math.round(stats.coins);
 	$("#win").style.display = "block";
 	world.running = false;
 };

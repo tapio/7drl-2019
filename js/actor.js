@@ -19,9 +19,10 @@ function Actor(x, y, def) {
 	this.criticalChance = def.criticalChance || 0;
 	this.luck = def.luck || 0;
 	this.stealth = def.stealth || 0;
-	this.gems = 0;
-	this.keys = 0;
-	this.coins = 0;
+	this.thirst = 0;
+	this.hunger = 0;
+	this.drunkenness = 0;
+	this.order = null;
 	this.ai = !def.ai ? null : {
 		type: def.ai,
 		target: null
@@ -31,9 +32,7 @@ function Actor(x, y, def) {
 	this.lootChance = def.lootChance || 0;
 	this.stats = {
 		turns: 0,
-		kills: 0,
-		gems: 0,
-		coins: 0
+		kills: 0
 	};
 	this.done = false;
 	this.moved = false;
@@ -107,25 +106,6 @@ Actor.prototype.doPath = function(checkItems, checkMapChange) {
 		var item = world.dungeon.getTile(waypoint[0], waypoint[1], Dungeon.LAYER_ITEM);
 		if (checkItems && item && this.path.length === 0) {
 			this.animPos = lerpVec2(this.pos, waypoint, 0.2);
-			if (item.id == "gem") {
-				this.gems++;
-				this.stats.gems++;
-				triggerAnimation($(".gem"), "tada");
-			} else if (item.id == "coin") {
-				this.coins++;
-				this.stats.coins++;
-				triggerAnimation($(".coin"), "tada");
-			} else if (item.id == "key") {
-				this.keys++;
-				triggerAnimation($(".key"), "tada");
-			} else if (item.id == "potion_health") {
-				if (this.health >= this.maxHealth) {
-					ui.msg("Health already full.", this);
-					return true;
-				}
-				this.health++;
-				triggerAnimation($(".heart"), "tada");
-			}
 			world.dungeon.setTile(waypoint[0], waypoint[1], null, Dungeon.LAYER_ITEM);
 			ui.msg("Picked up a " + item.name + ".", this);
 			ui.snd("pickup", this);
@@ -138,16 +118,8 @@ Actor.prototype.doPath = function(checkItems, checkMapChange) {
 				ui.snd("door_open", this);
 			} else if (object.id == "door_metal") {
 				this.animPos = lerpVec2(this.pos, waypoint, 0.2);
-				if (this.keys > 0) {
-					this.keys--;
-					world.dungeon.setTile(waypoint[0], waypoint[1], "door_metal_open", Dungeon.LAYER_STATIC);
-					ui.snd("door_open", this);
-				} else {
-					ui.msg("The door is locked! Find a key.", this);
-					ui.snd("door_locked", this);
-				}
-				this.path = [];
-				return true;
+				world.dungeon.setTile(waypoint[0], waypoint[1], "door_metal_open", Dungeon.LAYER_STATIC);
+				ui.snd("door_open", this);
 			}
 		}
 		this.pos[0] = waypoint[0];
@@ -201,7 +173,12 @@ Actor.prototype.attack = function(target) {
 
 Actor.prototype.interact = function(target) {
 	this.animPos = lerpVec2(this.pos, target.pos, 0.3);
-	ui.msg("Talking with " + target.name + " :)", this);
+	if (target.order) {
+		ui.msg(target.name + ": Where is my " + target.order.name + "!", this);
+		return;
+	}
+	target.order = randProp(DRINKS);
+	ui.msg(target.name + ": I'd like " + target.order.name, this);
 };
 
 Actor.prototype.act = function() {

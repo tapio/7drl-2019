@@ -296,6 +296,11 @@ var TILES = {
 		name: "health potion", desc: "Health potion restores one heart",
 		tileCoords: [ 8, 13 ], walkable: true, transparent: true
 	},
+	beer: {
+		name: "beer", desc: "A pint of beer",
+		tileCoords: [ 8, 13 ], walkable: true, transparent: true,
+		drink: true
+	},
 
 	player_male: {
 		tileCoords: [ 24, 0 ], walkable: false, transparent: true,
@@ -354,6 +359,9 @@ var TILES = {
 	tilemap: {} // Obsolete
 };
 
+var DRINKS = {};
+var FOOD = {};
+
 (function() {
 	if (!CONFIG.server) {
 		TILES.tileset = document.createElement("img");
@@ -375,6 +383,10 @@ var TILES = {
 			}
 		}
 		TILES.tileArray.push(tile);
+		if (tile.drink)
+			DRINKS[i] = tile;
+		if (tile.food)
+			FOOD[i] = tile;
 	}
 })();
 
