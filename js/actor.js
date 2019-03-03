@@ -19,9 +19,6 @@ function Actor(x, y, def) {
 	this.criticalChance = def.criticalChance || 0;
 	this.luck = def.luck || 0;
 	this.stealth = def.stealth || 0;
-	this.drainChance = def.drainChance || 0;
-	this.clairvoyant = false;
-	this.monsterMind = false;
 	this.gems = 0;
 	this.keys = 0;
 	this.coins = 0;
@@ -52,17 +49,7 @@ Actor.prototype.visibility = function(x, y) {
 	if (x < 0 || y < 0 || x >= dungeon.width || y >= dungeon.height)
 		return false;
 	return true;
-	/*if (this.clairvoyant) {
-		if (x == dungeon.start[0] && y == dungeon.start[1])
-			return 1;
-		if (x == dungeon.end[0] && y == dungeon.end[1])
-			return 1;
-	}
-	if (this.monsterMind) {
-		var monster = dungeon.getTile(x, y, Dungeon.LAYER_ACTOR);
-		if (monster) return 1;
-	}
-	return this.fov[x + y * world.dungeon.width];*/
+	//return this.fov[x + y * world.dungeon.width];
 };
 
 Actor.prototype.updateVisibility = function() {
@@ -198,10 +185,6 @@ Actor.prototype.attack = function(target) {
 				if (!existing) {
 					world.dungeon.setTile(target.pos[0], target.pos[1], target.loot, Dungeon.LAYER_ITEM);
 				}
-			}
-			if (rnd() < this.drainChance && this.health < this.maxHealth) {
-				this.health++;
-				ui.msg("You drained your kill for health.", this);
 			}
 		} else {
 			ui.msg("You hit " + target.name + " for " + damage + "!", this);
