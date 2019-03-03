@@ -22,12 +22,14 @@
 		Draw:  <span id="time-render"></span><br/>
 		UI:  <span id="time-ui"></span>
 	</div>
-	<a href="#menu" id="menu-open" class="btn btn-square" title="Menu">≡</a>
+
+	<a href="#menu" id="menu-open" class="btn btn-square corner" title="Menu">≡</a>
+
 	<div id="menu" class="modal">
+		<a href="#game" class="btn btn-square corner">✕</a>
 		<div class="menu">
-			<a href="#game" class="btn btn-square right">✕</a>
-			<h1>Menu</h1>
 			<div class="center">
+			<h1>Menu</h1>
 				<a href="#help" class="btn btn-text">Help</a>
 				<div id="pausemenu-fullscreen" class="btn btn-text">Fullscreen</div>
 				<div id="pausemenu-tilesize" class="btn btn-text">Tile Size</div>
@@ -46,7 +48,7 @@
 	<div id="messages"></div>
 
 	<div id="main" class="modal">
-		<div class="menu">
+		<div class="menu center">
 			<h1>Inn Keeper</h1>
 			<div><a href="#new" id="new-solo" class="btn btn-text">Start Solo</a></div>
 			<div><a href="#new" id="new-join" class="btn btn-text">Join Game</a></div>
@@ -59,7 +61,7 @@
 		</div>
 	</div>
 	<div id="new" class="modal">
-		<div class="menu">
+		<div class="menu center">
 			<h1>Create Your Bartender</h1>
 			<div id="new-male" class="btn btn-square"><div class="sprite sprite2x male"></div></div>
 			<div id="new-female" class="btn btn-square"><div class="sprite sprite2x female"></div></div>
