@@ -21,7 +21,7 @@ html {
 body {
 	padding: 0;
 	margin: 0;
-	color: whitesmoke;
+	color: antiquewhite;
 	background-color: #111;
 	font-family: 'kenney_miniregular', monospace;
 	font-size: 18px;
@@ -145,6 +145,7 @@ h1 {
 	font-size: 2em;
 	padding: 16px 0 16px 0;
 	margin: 0px;
+	color: darkorange;
 }
 
 .btn {
