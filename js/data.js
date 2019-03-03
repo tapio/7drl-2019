@@ -389,7 +389,7 @@ var MOBS = {
 	goblin: {
 		name: "Goblin", ch: TILES.goblin.ch, ai: "hunter",
 		desc: "Tough enemy",
-		health: 4, vision: 8, speed: 1,
+		health: 4, vision: 8, speed: 0.25,
 		loot: TILES.coin, lootChance: 1
 	},
 	mummy: {

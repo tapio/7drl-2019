@@ -26,7 +26,7 @@ function Actor(x, y, def) {
 		type: def.ai,
 		target: null
 	};
-	this.faction = def.ai ? 0 : 1;
+	this.faction = 0; //def.ai ? 0 : 1;
 	this.loot = def.loot || null;
 	this.lootChance = def.lootChance || 0;
 	this.stats = {
@@ -93,15 +93,15 @@ Actor.prototype.doPath = function(checkItems, checkMapChange) {
 		this.moved = false;
 		// Pathing
 		var waypoint = this.path.shift();
-		// Check enemy
-		var enemy = world.dungeon.getTile(waypoint[0], waypoint[1], Dungeon.LAYER_ACTOR);
-		if (enemy) {
+		// Check mob
+		var mob = world.dungeon.getTile(waypoint[0], waypoint[1], Dungeon.LAYER_ACTOR);
+		if (mob) {
 			this.path = [];
-			if (this.faction != enemy.faction) {
-				this.attack(enemy);
+			if (this.faction != mob.faction) {
+				this.attack(mob);
 				return true;
 			}
-			return false;
+			return this.interact(mob);
 		}
 		// Check items
 		var item = world.dungeon.getTile(waypoint[0], waypoint[1], Dungeon.LAYER_ITEM);
@@ -197,6 +197,11 @@ Actor.prototype.attack = function(target) {
 		ui.snd("miss", this);
 		ui.snd("miss", target);
 	}
+};
+
+Actor.prototype.interact = function(target) {
+	this.animPos = lerpVec2(this.pos, target.pos, 0.3);
+	ui.msg("Talking with " + target.name + " :)", this);
 };
 
 Actor.prototype.act = function() {
