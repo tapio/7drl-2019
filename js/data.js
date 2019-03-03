@@ -316,8 +316,21 @@ var TILES = {
 	},
 	beer: {
 		name: "beer", desc: "A pint of beer",
-		tileCoords: [ 8, 13 ], walkable: true, transparent: true,
+		tileCoords: [ 8, 15 ], walkable: true, transparent: true,
 		drink: true
+	},
+
+	ui_question: {
+		name: "question", desc: "",
+		tileCoords: [ 18, 15 ], walkable: true, transparent: true
+	},
+	ui_thanks: {
+		name: "thanks", desc: "",
+		tileCoords: [ 23, 15 ], walkable: true, transparent: true
+	},
+	ui_plus: {
+		name: "plus", desc: "",
+		tileCoords: [ 20, 15 ], walkable: true, transparent: true
 	},
 
 	player_male: {
@@ -405,6 +418,32 @@ var FOOD = {};
 			DRINKS[i] = tile;
 		if (tile.food)
 			FOOD[i] = tile;
+	}
+})();
+
+
+var IMGS = {
+	bubble1: {
+		src: "assets/bubble1.png"
+	},
+	bubble2: {
+		src: "assets/bubble2.png"
+	},
+	bubble3: {
+		src: "assets/bubble3.png"
+	}
+};
+
+(function() {
+	if (CONFIG.server)
+		return;
+	for (var i in IMGS) {
+		var img = IMGS[i];
+		if (img && img.src) {
+			img.id = i;
+			img.img = new Image();
+			img.img.src = img.src;
+		}
 	}
 })();
 

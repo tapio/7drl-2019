@@ -147,7 +147,7 @@ Actor.prototype.tryPickUp = function(item) {
 	}
 	// TODO: Handle multiplayer
 	this.items.push(item);
-	this.say("+🍺");
+	this.say([ TILES.ui_plus, TILES[item.id] ]);
 	ui.msg("Picked up a " + item.name + ".", this);
 	ui.snd("pickup", this);
 	return true;
@@ -188,24 +188,24 @@ Actor.prototype.interact = function(target) {
 			target.order = null;
 			ui.msg("You give " + item.name + " to " + target.name + ".", this);
 			ui.msg(target.name + ": Thanks!", this);
-			target.say("Thanks!");
+			target.say([ TILES.ui_thanks ]);
 			target.satisfaction++;
 			ui.snd("powerup", this);
 		} else {
 			ui.msg(target.name + ": Where is my " + target.order.name + "!", this);
 			target.satisfaction--;
-			target.say("🍺?");
+			target.say([ TILES[target.order.id], TILES.ui_question ]);
 		}
 		return;
 	}
 	target.order = randProp(DRINKS);
-	target.say("🍺");
+	target.say([ TILES[target.order.id] ]);
 	ui.msg(target.name + ": I'd like " + target.order.name, this);
 };
 
 Actor.prototype.say = function(msg, timeout) {
 	this.sayMsg = msg;
-	this.sayTimeout = timeout || 4;
+	this.sayTimeout = timeout || 10;
 }
 
 Actor.prototype.act = function() {

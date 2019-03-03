@@ -264,9 +264,30 @@ Dungeon.prototype.draw = function(camera, display, player) {
 	ctx.textAlign = "center";
 	for (var i = 0, l = sayActors.length; i < l; ++i) {
 		var actor = sayActors[i];
-		var tileCoords = actor.tile.tileCoords;
 		var x = actor.animPos[0] - camera.pos[0] + camera.offset[0];
 		var y = actor.animPos[1] - camera.pos[1] + camera.offset[1];
-		ctx.fillText(actor.sayMsg, (x + 0.5) * tw, (y - 0.75) * th);
+		// Speech bubble bg
+		var bgImg = IMGS.bubble1.img;
+		if (actor.sayMsg.length == 2)
+			bgImg = IMGS.bubble2.img;
+		else if (actor.sayMsg.length > 2)
+			bgImg = IMGS.bubble3.img;
+		x = (x + 0.5) * tw;
+		y = y * th;
+		ctx.drawImage(bgImg, x - bgImg.width * 0.5, y - bgImg.height - 1);
+		// "Emojis"
+		var count = actor.sayMsg.length;
+		x -= count * tw * 0.5;
+		y -= th + 6;
+		for (var j = 0; j < count; ++j) {
+			var tile = actor.sayMsg[j];
+			var tileCoords = tile.tileCoords;
+			ctx.drawImage(
+				display._options.tileSet,
+				tileCoords[0], tileCoords[1], tw, th,
+				x, y, tw, th
+			);
+			x += tw;
+		}
 	}
 };
