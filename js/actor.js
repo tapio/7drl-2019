@@ -16,9 +16,7 @@ function Actor(x, y, def) {
 	this.health = def.health || 3;
 	this.maxHealth = this.health;
 	this.dexterity = def.dexterity || 0.5;
-	this.criticalChance = def.criticalChance || 0;
-	this.luck = def.luck || 0;
-	this.stealth = def.stealth || 0;
+	this.satisfaction = 0;
 	this.thirst = 0;
 	this.hunger = 0;
 	this.drunkenness = 0;
@@ -32,8 +30,6 @@ function Actor(x, y, def) {
 	this.sayMsg = null;
 	this.sayTimeout = 0;
 	this.faction = def.ai ? 0 : 1;
-	this.loot = def.loot || null;
-	this.lootChance = def.lootChance || 0;
 	this.stats = {
 		turns: 0,
 		kills: 0
@@ -161,8 +157,6 @@ Actor.prototype.attack = function(target) {
 	this.animPos = lerpVec2(this.pos, target.pos, 0.3);
 	if (rnd() < this.dexterity) {
 		var damage = 1;
-		if (rnd() < this.criticalChance)
-			damage *= 2;
 		target.health -= damage;
 		ui.snd("hit", this);
 		ui.snd("hit", target);
@@ -172,12 +166,6 @@ Actor.prototype.attack = function(target) {
 			ui.msg("You killed " + target.name + "!", this);
 			ui.msg(this.name + " kills you!", target, "warn");
 			ui.vibrate(300, target);
-			if (target.loot && rnd() < target.lootChance + this.luck) {
-				var existing = world.dungeon.getTile(target.pos[0], target.pos[1], Dungeon.LAYER_ITEM);
-				if (!existing) {
-					world.dungeon.setTile(target.pos[0], target.pos[1], target.loot, Dungeon.LAYER_ITEM);
-				}
-			}
 		} else {
 			ui.msg("You hit " + target.name + " for " + damage + "!", this);
 			ui.msg(this.name + " hits you for " + damage + "!", target, "warn");
@@ -201,9 +189,11 @@ Actor.prototype.interact = function(target) {
 			ui.msg("You give " + item.name + " to " + target.name + ".", this);
 			ui.msg(target.name + ": Thanks!", this);
 			target.say("Thanks!");
+			target.satisfaction++;
 			ui.snd("powerup", this);
 		} else {
 			ui.msg(target.name + ": Where is my " + target.order.name + "!", this);
+			target.satisfaction--;
 			target.say("🍺?");
 		}
 		return;
