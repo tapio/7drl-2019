@@ -12,7 +12,9 @@ function createGame(id, data) {
 		id: id,
 		data: data,
 		players: {},
-		numPlayers: 0
+		spectators: {},
+		numPlayers: 0,
+		numSpectators: 0,
 	};
 }
 
@@ -20,7 +22,7 @@ function Player(socket, id, game) {
 	this.socket = socket;
 	this.id = id;
 	this.game = game;
-	this.pos = [ 0, 0 ];
+	this.pos = null;
 }
 
 Player.prototype.serialize = function() {
@@ -36,14 +38,32 @@ Player.prototype.join = function(game) {
 	this.game = games[game]; // Cache reference
 	this.game.players[this.id] = this; // Join
 	this.game.numPlayers++;
-	this.pos[0] = 2; //FIXME
-	this.pos[1] = 3;
+	this.pos = [ 2, 3 ]; // FIXME
 };
+
+Player.prototype.spectate = function(game) {
+	if (!this.id) return; // Id is required
+	this.leave(); // Leave if already in game
+	// Create game if not present
+	if (!games[game])
+		createGame(game, null);
+	this.game = games[game]; // Cache reference
+	this.game.spectators[this.id] = this; // Join
+	this.game.numSpectators++;
+	this.pos = null;
+};
+
+Player.prototype.isSpectator = function() { return !this.pos; }
 
 Player.prototype.leave = function() {
 	if (!this.game) return; // Nothing to do if not in game
-	delete this.game.players[this.id]; // Leave the game
-	this.game.numPlayers--;
+	if (this.isSpectator()) {
+		delete this.game.spectators[this.id]; // Leave the game
+		this.game.numSpectators--;
+	} else {
+		delete this.game.players[this.id]; // Leave the game
+		this.game.numPlayers--;
+	}
 	//if (this.game.numPlayers == 0)
 	//	delete games[this.game.id];
 	delete this.game; // Remove cached game reference
@@ -67,12 +87,18 @@ Player.prototype.broadcast = function(data, metoo) {
 		if ((i !== this.id || metoo) && players[i])
 			players[i].socket.send(JSON.stringify(data));
 	}
+	var spectators = this.game.spectators;
+	for (var i in spectators) {
+		if ((i !== this.id || metoo) && spectators[i])
+			spectators[i].socket.send(JSON.stringify(data));
+	}
 };
 
 
 var server = new WebSocketServer({ port: PORT });
 server.on('connection', function(ws) {
-	var pl = new Player(ws);
+	var id = "P" + (nextPlayerId++);
+	var pl = new Player(ws, id);
 
 	ws.on('message', function(msg) {
 		if (VERBOSITY > 1) console.log("Received: " + msg);
@@ -81,12 +107,13 @@ server.on('connection', function(ws) {
 			// Create game
 			case "create":
 				createGame(msg.game, msg.data);
+				pl.spectate(msg.game); // Can later join properly
+				if (VERBOSITY > 0) console.log(pl.id + " creates game " + msg.game);
 				break;
 			// Join game
 			case "join":
-				pl.id = "P" + (nextPlayerId++);
 				pl.join(msg.game);
-				if (VERBOSITY > 0) console.log(pl.id + " joins game " + msg.game + " (" + pl.game.numPlayers + " players)");
+				if (VERBOSITY > 0) console.log(pl.id + " joins game " + msg.game + " (" + pl.game.numPlayers + " players, " + pl.game.numSpectators + " spectators)");
 				pl.broadcast({ type: "state", data: [ pl.serialize() ] }); // Inform others
 				ws.send(JSON.stringify({ type: "join", player: pl.serialize(), data: pl.game.data })); // Inform newcomer about the id
 				ws.send(JSON.stringify(pl.getGameState())); // Inform newcomer about others

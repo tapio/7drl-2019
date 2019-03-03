@@ -91,7 +91,7 @@ function Client(params) {
 		if (this.connected) ui.msg("Connection terminated!");
 		else ui.msg("Connection failed!");
 		this.connected = false;
-		this.actor.id = null;
+		if (this.actor) this.actor.id = null;
 	}).bind(this);
 };
 
