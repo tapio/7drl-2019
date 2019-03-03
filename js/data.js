@@ -386,47 +386,11 @@ var MOBS = {
 		health: 3, vision: 9, speed: 1,
 		loot: TILES.coin, lootChance: 0.5
 	},
-	slime: {
-		name: "Slime", ch: TILES.slime.ch, ai: "hunter",
-		desc: "Disgusting but thankfully very slow",
-		health: 3, vision: 5, speed: 0.5,
-		loot: TILES.potion_health, lootChance: 0.333
-	},
-	bat: {
-		name: "Giant Bat", ch: TILES.bat.ch, ai: "hunter",
-		desc: "Easy to kill and has bad vision, but they are fast and plentyful",
-		health: 1, vision: 4, speed: 1.5,
-		loot: TILES.potion_health, lootChance: 0.333
-	},
-	ghost: {
-		name: "Ghost", ch: TILES.ghost.ch, ai: "hunter",
-		desc: "Dangerous and scary",
-		health: 2, vision: 9, speed: 1,
-		loot: TILES.gem, lootChance: 0.333
-	},
-	spider: {
-		name: "Giant Spider", ch: TILES.spider.ch, ai: "hunter",
-		desc: "Dangerous, scary and fast",
-		health: 2, vision: 7, speed: 1.2,
-		loot: TILES.coin, lootChance: 0.4
-	},
 	goblin: {
 		name: "Goblin", ch: TILES.goblin.ch, ai: "hunter",
 		desc: "Tough enemy",
 		health: 4, vision: 8, speed: 1,
 		loot: TILES.coin, lootChance: 1
-	},
-	rat: {
-		name: "Giant rat", ch: TILES.rat.ch, ai: "hunter",
-		desc: "Weak enemy with poor vision",
-		health: 1, vision: 3, speed: 1,
-		loot: TILES.coin, lootChance: 0.4
-	},
-	golem: {
-		name: "Rock Golem", ch: TILES.golem.ch, ai: "hunter",
-		desc: "Extremely tough and strong, but thankfully slow and doesn't see far",
-		health: 8, vision: 3, speed: 0.5, criticalChance: 0.6,
-		loot: TILES.potion_health, lootChance: 1
 	},
 	mummy: {
 		name: "Mummy", ch: TILES.mummy.ch, ai: "hunter",
@@ -434,12 +398,6 @@ var MOBS = {
 		health: 2, vision: 3, speed: 0.75,
 		loot: TILES.coin, lootChance: 0.5
 	},
-	skull: {
-		name: "Flaming Skull", ch: TILES.skull.ch, ai: "hunter",
-		desc: "Super fast and difficult to kill",
-		health: 6, vision: 3, speed: 2, criticalChance: 0.2,
-		loot: TILES.gem, lootChance: 1
-	}
 };
 
 (function() {
@@ -498,23 +456,8 @@ var LEVELS = [
 		counter: [ TILES.table ],
 		decor: [ TILES.cupboard, TILES.pot ],
 		decorAmount: 10,
-		mobs: [],
-		mobAmount: 0,
-		items: [ ],
-		itemAmount: 0
-	},{
-		name: "Inn",
-		desc: "The Pranching Pony",
-		generator: "inn",
-		width: 20,
-		height: 15,
-		wallOnStaticLayer: true,
-		wall: [ TILES.wall_stone_classy ],
-		floor: [ TILES.floor_cobblestone, TILES.floor_cobblestone2 ],
-		decor: [ TILES.chest, TILES.chest_open, TILES.pot, TILES.statue ],
-		decorAmount: 10,
-		mobs: [],
-		mobAmount: 0,
+		mobs: [ MOBS.goblin ],
+		mobAmount: 2,
 		items: [ ],
 		itemAmount: 0
 	}

@@ -209,7 +209,7 @@ Actor.prototype.act = function() {
 	}
 
 	if (this.ai)
-		return this.hunterAI();
+		return this.drunkAI();
 
 	if (this.doPath(true, true)) {
 		this.updateVisibility();
