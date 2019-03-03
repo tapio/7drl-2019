@@ -151,7 +151,7 @@ Actor.prototype.tryPickUp = function(item) {
 	}
 	// TODO: Handle multiplayer
 	this.items.push(item);
-	this.say("🍺");
+	this.say("+🍺");
 	ui.msg("Picked up a " + item.name + ".", this);
 	ui.snd("pickup", this);
 	return true;
