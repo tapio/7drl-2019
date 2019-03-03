@@ -5,6 +5,7 @@ function Dungeon(id, params) {
 	this.width = 0;
 	this.height = 0;
 	this.actors = [];
+	this.chairs = [];
 	this.playerFov = [];
 	this.map = [];
 	this.start = [0, 0];

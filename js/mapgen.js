@@ -70,6 +70,8 @@ Dungeon.prototype.generateInn = function(params) {
 		this.setTile(x-1, y, params.chair[0], Dungeon.LAYER_STATIC);
 		this.setTile(x+0, y, params.table.random(), Dungeon.LAYER_STATIC);
 		this.setTile(x+1, y, params.chair[1], Dungeon.LAYER_STATIC);
+		this.chairs.push([x-1, y]);
+		this.chairs.push([x+1, y]);
 	}).bind(this);
 	for (var y = 4; y < this.height - 3; y += 3)
 		for (var x = 6; x < this.width - 3; x += 4)

@@ -235,7 +235,7 @@ Actor.prototype.act = function() {
 	}
 
 	if (this.ai)
-		return this.drunkAI();
+		return this.patronAI();
 
 	if (this.doPath(true, true)) {
 		this.updateVisibility();
@@ -252,6 +252,21 @@ Actor.prototype.drunkAI = function() {
 		this.path.push(newPos);
 		this.doPath(false, false);
 	}
+	return true;
+};
+
+Actor.prototype.patronAI = function() {
+	if (!this.ai.target) {
+		var chair = randElem(world.dungeon.chairs);
+		if (chair) {
+			this.ai.target = chair;
+		} else {
+			return this.drunkAI();
+		}
+	}
+	var target = this.ai.target;
+	this.moveTo(target[0], target[1]);
+	this.doPath(false, false);
 	return true;
 };
 
