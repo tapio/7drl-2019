@@ -201,8 +201,10 @@ Dungeon.prototype.draw = function(camera, display, player) {
 	this.needsRender = false;
 	//display.clear();
 	display._dirty = false;
-	display._context.fillStyle = display._options.bg;
-	display._context.fillRect(0, 0, display._context.canvas.width, display._context.canvas.height);
+	var ctx = display._context;
+	ctx.fillStyle = display._options.bg;
+	ctx.fillRect(0, 0, display._context.canvas.width, display._context.canvas.height);
+	ctx.font = "16px kenney_miniregular monospace";
 
 	var w = display.getOptions().width;
 	var h = display.getOptions().height;
@@ -211,7 +213,7 @@ Dungeon.prototype.draw = function(camera, display, player) {
 
 	function drawTile(x, y, ch) {
 		var tileCoords = TILES.tileArray[ch].tileCoords;
-		display._context.drawImage(
+		ctx.drawImage(
 			display._options.tileSet,
 			tileCoords[0], tileCoords[1], tw, th,
 			x, y, tw, th
@@ -234,11 +236,12 @@ Dungeon.prototype.draw = function(camera, display, player) {
 			if (visibility > 0.9 && this.map[Dungeon.LAYER_ITEM][k])
 				drawTile(visx, visy, this.map[Dungeon.LAYER_ITEM][k].ch);
 			if (visibility <= 0.9) {
-				display._context.fillStyle = "rgba(0,0,0,0.6)";
-				display._context.fillRect(visx, visy, tw, th);
+				ctx.fillStyle = "rgba(0,0,0,0.6)";
+				ctx.fillRect(visx, visy, tw, th);
 			}
 		}
 	}
+	var sayActors = [];
 	for (var i = 0, l = this.actors.length; i < l; ++i) {
 		var actor = this.actors[i];
 		var visibility = player.visibility(actor.pos[0], actor.pos[1]);
@@ -246,11 +249,23 @@ Dungeon.prototype.draw = function(camera, display, player) {
 			var tileCoords = actor.tile.tileCoords;
 			var x = actor.animPos[0] - camera.pos[0] + camera.offset[0];
 			var y = actor.animPos[1] - camera.pos[1] + camera.offset[1];
-			display._context.drawImage(
+			ctx.drawImage(
 				display._options.tileSet,
 				tileCoords[0], tileCoords[1], tw, th,
 				x * tw, y * th, tw, th
 			);
+			if (actor.sayMsg)
+				sayActors.push(actor);
 		}
+	}
+	// Speech bubbles, rendered separately to render on top of everything
+	ctx.fillStyle = "#fff";
+	ctx.textAlign = "center";
+	for (var i = 0, l = sayActors.length; i < l; ++i) {
+		var actor = sayActors[i];
+		var tileCoords = actor.tile.tileCoords;
+		var x = actor.animPos[0] - camera.pos[0] + camera.offset[0];
+		var y = actor.animPos[1] - camera.pos[1] + camera.offset[1];
+		ctx.fillText(actor.sayMsg, (x + 0.5) * tw, (y - 0.75) * th);
 	}
 };

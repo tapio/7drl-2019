@@ -29,6 +29,8 @@ function Actor(x, y, def) {
 		type: def.ai,
 		target: null
 	};
+	this.sayMsg = null;
+	this.sayTimeout = 0;
 	this.faction = def.ai ? 0 : 1;
 	this.loot = def.loot || null;
 	this.lootChance = def.lootChance || 0;
@@ -149,6 +151,7 @@ Actor.prototype.tryPickUp = function(item) {
 	}
 	// TODO: Handle multiplayer
 	this.items.push(item);
+	this.say("🍺");
 	ui.msg("Picked up a " + item.name + ".", this);
 	ui.snd("pickup", this);
 	return true;
@@ -197,19 +200,34 @@ Actor.prototype.interact = function(target) {
 			target.order = null;
 			ui.msg("You give " + item.name + " to " + target.name + ".", this);
 			ui.msg(target.name + ": Thanks!", this);
+			target.say("Thanks!");
 			ui.snd("powerup", this);
 		} else {
 			ui.msg(target.name + ": Where is my " + target.order.name + "!", this);
+			target.say("🍺?");
 		}
 		return;
 	}
 	target.order = randProp(DRINKS);
+	target.say("🍺");
 	ui.msg(target.name + ": I'd like " + target.order.name, this);
 };
+
+Actor.prototype.say = function(msg, timeout) {
+	this.sayMsg = msg;
+	this.sayTimeout = timeout || 4;
+}
 
 Actor.prototype.act = function() {
 	if (this.health <= 0)
 		return true;
+
+	if (this.sayMsg) {
+		this.sayTimeout--;
+		if (this.sayTimeout <= 0) {
+			this.sayMsg = null;
+		}
+	}
 
 	if (this.done) {
 		this.done = false;
