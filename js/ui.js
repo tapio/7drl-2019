@@ -150,7 +150,7 @@ function UI(player) {
 			};
 			var pl = new Actor(world.dungeon.start[0], world.dungeon.start[1], def);
 			pl.updateVisibility();
-			world.dungeon.actors.push(pl);
+			world.addActor(pl);
 			ui.actor = pl;
 		}
 		if (ui.hostingChoice !== "solo") {
@@ -379,9 +379,9 @@ UI.prototype.update = function() {
 	if (!CONFIG.touch) {
 		var cursor = "default";
 		var mx = this.mouse.x, my = this.mouse.y;
-		if (this.actor.path.length || world.currentActor != this.actor) {
+		/*if (this.actor.path.length || world.currentActor != this.actor) {
 			cursor = "wait";
-		} else if (this.actor.visibility(mx, my) > 0.1) {
+		} else*/ if (this.actor.visibility(mx, my) > 0.1) {
 			if (world.dungeon.getTile(mx, my, Dungeon.LAYER_ITEM))
 				cursor = "cell";
 			else if (world.dungeon.getPassable(mx, my))

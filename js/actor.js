@@ -232,7 +232,7 @@ Actor.prototype.act = function() {
 		this.updateVisibility();
 		return true;
 	}
-	return false;
+	return true; // Can't wait in MP
 };
 
 Actor.prototype.drunkAI = function() {

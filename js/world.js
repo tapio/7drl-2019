@@ -24,6 +24,13 @@ World.prototype.resetScheduler = function() {
 		this.scheduler.add(this.dungeon.actors[i], true);
 };
 
+World.prototype.addActor = function(actor) {
+	this.dungeon.actors.push(actor);
+	this.dungeon.update();
+	this.resetScheduler();
+	this.running = true;
+};
+
 World.prototype.start = function() {
 	this.dungeon.update();
 	this.resetScheduler();

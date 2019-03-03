@@ -26,7 +26,7 @@ function Client(params) {
 		pingInterval = window.setInterval((function() {
 			pingTime = performance.now();
 			this.send({ type: "ping" });
-		}).bind(this), 1500);
+		}).bind(this), 3500);
 	}).bind(this);
 
 	this.socket.onmessage = (function(event) {
@@ -53,7 +53,7 @@ function Client(params) {
 						peer.id = state.id;
 						peer.pos[0] = state.pos[0];
 						peer.pos[1] = state.pos[1];
-						dungeon.actors.push(peer);
+						world.addActor(peer);
 					} else {
 						dungeon.findPath(state.pos[0], state.pos[1], peer);
 					}
