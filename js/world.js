@@ -24,24 +24,10 @@ World.prototype.resetScheduler = function() {
 		this.scheduler.add(this.dungeon.actors[i], true);
 };
 
-World.prototype.create = function() {
-	var def = {
-		desc: "That's you!",
-		ch: TILES[ui.characterChoice].ch,
-		health: 10,
-		speed: 1,
-		criticalChance: 0,
-		vision: 5
-	};
-	var pl = new Actor(this.dungeon.start[0], this.dungeon.start[1], def);
-	pl.updateVisibility();
-	var gameName = window.location.search.substring(1);
-	pl.client = new Client(pl, null, gameName);
-	this.dungeon.actors.push(pl);
+World.prototype.start = function() {
 	this.dungeon.update();
 	this.resetScheduler();
 	this.running = true;
-	return pl;
 };
 
 World.prototype.update = function(dt) {

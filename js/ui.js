@@ -8,6 +8,9 @@ function UI(player) {
 	this.mouse = { x: 0, y: 0, downTime: 0, longpress: false };
 	this.pressed = [];
 	this.characterChoice = null;
+	this.hostingChoice = null;
+	this.gameName = "";
+	this.playerName = "Noname";
 	this.dom = {
 		fps: $("#fps"),
 		depth: $("#depth"),
@@ -59,6 +62,46 @@ function UI(player) {
 			else if (document.webkitExitFullscreen) document.webkitExitFullscreen();
 		}
 	}
+	function genGameId() {
+		var key = { 'i': 'w', 'l': 'x', 'o': 'y', 'u': 'z' }; // Crockford's Base32
+		var randomInt = Math.floor(Math.random() * 1048576); // 32^4
+		return randomInt.toString(32).replace(/[ilou]/, function (a) { return key[a]; });
+	}
+	function validateNewGame() {
+		var valid = !!ui.characterChoice && !!ui.hostingChoice && !!ui.gameName /*&& !!ui.playerName*/;
+		if (valid)
+			$("#new-ok").classList.remove("btn-disabled");
+		else
+			$("#new-ok").classList.add("btn-disabled");
+	}
+	$("#new-solo").addEventListener("click", function() {
+		ui.hostingChoice = "solo";
+		ui.gameName = "__solo__";
+		$("#join-game-name").classList.add("hidden");
+	}, false);
+	$("#new-join").addEventListener("click", function() {
+		ui.hostingChoice = "join";
+		$("#join-game-name").classList.remove("hidden");
+	}, false);
+	$("#new-host-join").addEventListener("click", function() {
+		ui.hostingChoice = "host-join";
+		ui.gameName = genGameId();
+		$("#join-game-name").classList.add("hidden");
+	}, false);
+	$("#new-host-only").addEventListener("click", function() {
+		ui.hostingChoice = "host-only";
+		ui.gameName = genGameId();
+		$("#join-game-name").classList.add("hidden");
+	}, false);
+	$("#join-game-name").addEventListener("input", function() {
+		ui.gameName = this.value;
+		validateNewGame();
+	}, false);
+	$("#new-name").addEventListener("input", function() {
+		ui.playerName = this.value;
+		validateNewGame();
+	}, false);
+	$("#main-fullscreen").addEventListener("click", toggleFullscreen, false);
 	$("#new-fullscreen").addEventListener("click", toggleFullscreen, false);
 	$("#pausemenu-fullscreen").addEventListener("click", toggleFullscreen, false);
 	$("#pausemenu-tilesize").addEventListener("click", function() {
@@ -89,17 +132,43 @@ function UI(player) {
 	$("#new-male").addEventListener("click", function() {
 		this.classList.add("btn-selected");
 		$("#new-female").classList.remove("btn-selected");
-		$("#new-ok").classList.remove("btn-disabled");
 		ui.characterChoice = "player_male";
+		validateNewGame();
 	}, false);
 	$("#new-female").addEventListener("click", function() {
 		this.classList.add("btn-selected");
 		$("#new-male").classList.remove("btn-selected");
-		$("#new-ok").classList.remove("btn-disabled");
 		ui.characterChoice = "player_female";
+		validateNewGame();
 	}, false);
 	$("#new-ok").addEventListener("click", function() {
-		ui.actor = world.create();
+		if (ui.hostingChoice !== "host-only") {
+			var def = {
+				name: ui.playerName,
+				desc: "That's you!",
+				ch: TILES[ui.characterChoice].ch,
+			};
+			var pl = new Actor(world.dungeon.start[0], world.dungeon.start[1], def);
+			pl.updateVisibility();
+			world.dungeon.actors.push(pl);
+			ui.actor = pl;
+		}
+		if (ui.hostingChoice !== "solo") {
+			var clientParams = {
+				host: ui.hostingChoice !== "join",
+				join: ui.hostingChoice !== "host-only",
+				game: ui.gameName,
+				actor: ui.actor
+			}
+			if (ui.actor) {
+				ui.actor.client = new Client(clientParams);
+			} else {
+				// TODO: Need to relocate for hosting only
+				ui.client = new Client(clientParams);
+			}
+		}
+		world.start();
+
 		// "Liberate" sounds in user gesture so that they work on mobile
 		for (var sound in SOUNDS) {
 			if (SOUNDS[sound].audio)
@@ -126,6 +195,10 @@ function UI(player) {
 		}
 		if (hash == "#win" || hash == "#death") {
 			window.location.hash = "#game";
+			return;
+		}
+		if (hash == "#new" && !this.hostingChoice) {
+			window.location.hash = "#main";
 			return;
 		}
 		if (hash == "#new" && world.running) {
@@ -208,7 +281,9 @@ UI.prototype.onKeyDown = function(e) {
 		else if (e.keyCode == ROT.VK_PAGE_DOWN || e.keyCode == ROT.VK_NUMPAD3 || e.keyCode == ROT.VK_N)
 			this.actor.move(1, 1);
 	}
-	e.preventDefault();
+	else if (window.location.hash !== "#new") {
+		e.preventDefault();
+	}
 };
 
 UI.prototype.onKeyUp = function(e) {

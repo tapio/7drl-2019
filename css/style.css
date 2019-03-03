@@ -27,6 +27,14 @@ body {
 	font-size: 18px;
 }
 
+::placeholder {
+	font-family: 'kenney_miniregular', monospace;
+}
+
+input[type="text"] {
+	font-family: 'kenney_miniregular', monospace;
+}
+
 @media (max-width: 600px), (max-height: 500px) {
 	body {
 		font-size: 14px;
@@ -70,6 +78,10 @@ canvas {
 	image-rendering: -o-crisp-edges;
 	image-rendering: pixelated;
 	-ms-interpolation-mode: nearest-neighbor;
+}
+
+.hidden {
+	display: none !important;
 }
 
 #error {
@@ -192,6 +204,33 @@ h1 {
 	width: 100px;
 }
 
+.input-box {
+	display: block;
+	font-size: 20px;
+	width: 200px;
+	height: 32px;
+	line-height: 46px;
+	margin: 4px;
+	text-align: center;
+	vertical-align: middle;
+	color: #210;
+	cursor: pointer;
+	border-image: url('../assets/ui/brown_pressed.png') 16 fill repeat;
+	border-image-width: 16px;
+	text-decoration: none;
+	-webkit-tap-highlight-color: rgba(0, 0, 0, 0);
+	-webkit-touch-callout: none;
+	-webkit-user-select: none;
+	-moz-user-select: none;
+	-ms-user-select: none;
+	user-select: none;
+}
+
+.input-box::placeholder {
+	color: #420;
+	font-size: 16px;
+}
+
 .modal {
 	display: none;
 	position: absolute;
@@ -245,12 +284,12 @@ h1 {
 	display: inline-block;
 	width: 16px;
 	height: 16px;
-    image-rendering: optimizeSpeed;
-    image-rendering: -moz-crisp-edges;
-    image-rendering: -webkit-optimize-contrast;
-    image-rendering: -o-crisp-edges;
-    image-rendering: pixelated;
-    -ms-interpolation-mode: nearest-neighbor;
+	image-rendering: optimizeSpeed;
+	image-rendering: -moz-crisp-edges;
+	image-rendering: -webkit-optimize-contrast;
+	image-rendering: -o-crisp-edges;
+	image-rendering: pixelated;
+	-ms-interpolation-mode: nearest-neighbor;
 }
 .sprite2x {
 	-webkit-transform: scale(2);

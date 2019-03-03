@@ -1,11 +1,12 @@
-function Client(actor, host, game) {
-	this.actor = actor;
+function Client(params) {
+	this.actor = params.actor || null;
 	this.connected = false;
 	var protocol = window.location.protocol === 'http:' ? 'ws://' : 'wss://';
-	host = host || protocol + window.location.hostname + ":10666";
-	ui.msg("Connecting to " + host + "...");
-	this.socket = new WebSocket(host);
+	var server = params.server || protocol + window.location.hostname + ":10666";
+	ui.msg("Connecting to " + server + "...");
+	this.socket = new WebSocket(server);
 	this.ping = Infinity;
+	this.game = params.game || "testgame";
 	var pingTime = 0;
 	var pingInterval = null;
 
@@ -15,8 +16,12 @@ function Client(actor, host, game) {
 
 	this.socket.onopen = (function() {
 		ui.msg("Connection established!");
-		this.send({ type: "create", game: game || "testgame", data: world.dungeon.serialize() });
-		this.send({ type: "join", game: game || "testgame" });
+		if (params.host) {
+			this.send({ type: "create", game: this.game, data: world.dungeon.serialize() });
+		}
+		if (params.join) {
+			this.send({ type: "join", game: this.game });
+		}
 		this.connected = true;
 		pingInterval = window.setInterval((function() {
 			pingTime = performance.now();

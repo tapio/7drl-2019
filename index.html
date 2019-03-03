@@ -48,21 +48,25 @@
 	<div id="main" class="modal">
 		<div class="menu">
 			<h1>Inn Keeper</h1>
-			<div><a href="#new" id="new-sp" class="btn btn-text">Start Solo</a></div>
+			<div><a href="#new" id="new-solo" class="btn btn-text">Start Solo</a></div>
 			<div><a href="#new" id="new-join" class="btn btn-text">Join Game</a></div>
-			<div><a href="#new" id="new-host" class="btn btn-text">Host and Join</a></div>
-			<div><a href="#new" id="new-host-pure" class="btn btn-text">Host Only</a></div>
-			<div id="new-fullscreen" class="btn btn-text">Fullscreen</div>
+			<div><a href="#new" id="new-host-join" class="btn btn-text">Host and Join</a></div>
+			<div><a href="#new" id="new-host-only" class="btn btn-text">Host Only</a></div>
+			<div>&nbsp;</div>
+			<div id="main-fullscreen" class="btn btn-text">Fullscreen</div>
 			<div><a href="#help" class="btn btn-text">Instructions</a></div>
 			<div><a href="#about" class="btn btn-text">About</a></div>
 		</div>
 	</div>
 	<div id="new" class="modal">
 		<div class="menu">
-			<h1>Choose Your Character</h1>
+			<h1>Create Your Bartender</h1>
 			<div id="new-male" class="btn btn-square"><div class="sprite sprite2x male"></div></div>
 			<div id="new-female" class="btn btn-square"><div class="sprite sprite2x female"></div></div>
+			<input type="text" class="input-box" id="new-name" name="new-name" placeholder="Name" minlength=1 maxlength="16">
+			<input type="text" class="input-box" id="join-game-name" name="join-game-name" placeholder="Game Name" maxlength="4">
 			<div><a href="#game" id="new-ok" class="btn btn-text btn-disabled">Let's Go</a></div>
+			<div>&nbsp;</div>
 			<div id="new-fullscreen" class="btn btn-text">Fullscreen</div>
 			<div><a href="#main" id="new-back" class="btn btn-text">Back</a></div>
 		</div>
