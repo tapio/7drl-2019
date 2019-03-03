@@ -266,6 +266,12 @@ var TILES = {
 		desc: "Table"
 	},
 
+	barrel: {
+		name: "beer barrel", desc: "Here be beer",
+		tileCoords: [ 15, 2 ], walkable: true, transparent: true,
+		container: "beer"
+	},
+
 	altar: {
 		tileCoords: [ 8, 7 ], walkable: true, transparent: true,
 		desc: "Gods offer favors for sacrifices on this altar",

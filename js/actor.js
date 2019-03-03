@@ -23,11 +23,13 @@ function Actor(x, y, def) {
 	this.hunger = 0;
 	this.drunkenness = 0;
 	this.order = null;
+	this.items = [];
+	this.maxItems = 1;
 	this.ai = !def.ai ? null : {
 		type: def.ai,
 		target: null
 	};
-	this.faction = 0; //def.ai ? 0 : 1;
+	this.faction = def.ai ? 0 : 1;
 	this.loot = def.loot || null;
 	this.lootChance = def.lootChance || 0;
 	this.stats = {
@@ -97,18 +99,18 @@ Actor.prototype.doPath = function(checkItems, checkMapChange) {
 		if (mob) {
 			this.path = [];
 			if (this.faction != mob.faction) {
-				this.attack(mob);
+				this.interact(mob);
 				return true;
 			}
-			return this.interact(mob);
+			return false;
 		}
 		// Check items
 		var item = world.dungeon.getTile(waypoint[0], waypoint[1], Dungeon.LAYER_ITEM);
 		if (checkItems && item && this.path.length === 0) {
 			this.animPos = lerpVec2(this.pos, waypoint, 0.2);
-			world.dungeon.setTile(waypoint[0], waypoint[1], null, Dungeon.LAYER_ITEM);
-			ui.msg("Picked up a " + item.name + ".", this);
-			ui.snd("pickup", this);
+			if (this.tryPickUp(item)) {
+				world.dungeon.setTile(waypoint[0], waypoint[1], null, Dungeon.LAYER_ITEM);
+			}
 			return true;
 		}
 		var object = world.dungeon.getTile(waypoint[0], waypoint[1], Dungeon.LAYER_STATIC);
@@ -117,9 +119,12 @@ Actor.prototype.doPath = function(checkItems, checkMapChange) {
 				world.dungeon.setTile(waypoint[0], waypoint[1], "door_wood_open", Dungeon.LAYER_STATIC);
 				ui.snd("door_open", this);
 			} else if (object.id == "door_metal") {
-				this.animPos = lerpVec2(this.pos, waypoint, 0.2);
 				world.dungeon.setTile(waypoint[0], waypoint[1], "door_metal_open", Dungeon.LAYER_STATIC);
 				ui.snd("door_open", this);
+			} else if (object.container) {
+				var item = clone(TILES[object.container]);
+				this.tryPickUp(item);
+				return true;
 			}
 		}
 		this.pos[0] = waypoint[0];
@@ -135,6 +140,18 @@ Actor.prototype.doPath = function(checkItems, checkMapChange) {
 		return true;
 	}
 	return false;
+};
+
+Actor.prototype.tryPickUp = function(item) {
+	if (this.items.length >= this.maxItems) {
+		ui.msg("Can't carry more items.", this);
+		return false;
+	}
+	// TODO: Handle multiplayer
+	this.items.push(item);
+	ui.msg("Picked up a " + item.name + ".", this);
+	ui.snd("pickup", this);
+	return true;
 };
 
 Actor.prototype.attack = function(target) {
@@ -174,7 +191,16 @@ Actor.prototype.attack = function(target) {
 Actor.prototype.interact = function(target) {
 	this.animPos = lerpVec2(this.pos, target.pos, 0.3);
 	if (target.order) {
-		ui.msg(target.name + ": Where is my " + target.order.name + "!", this);
+		var item = this.items.find(function(elem) { return elem.id == target.order.id; });
+		if (item) {
+			removeElem(this.items, item);
+			target.order = null;
+			ui.msg("You give " + item.name + " to " + target.name + ".", this);
+			ui.msg(target.name + ": Thanks!", this);
+			ui.snd("powerup", this);
+		} else {
+			ui.msg(target.name + ": Where is my " + target.order.name + "!", this);
+		}
 		return;
 	}
 	target.order = randProp(DRINKS);
