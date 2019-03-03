@@ -61,11 +61,6 @@ Dungeon.prototype.generateInn = function(params) {
 			this.setTile(x, y, params.counter.random(), Dungeon.LAYER_STATIC);
 			return;
 		}
-		// Barrels
-		if (x == 1 && y == Math.floor(this.height / 2)) {
-			this.setTile(x, y, TILES.barrel, Dungeon.LAYER_STATIC);
-			return;
-		}
 		// By the wall decor
 		if (y == 1 || y == this.height - 2)
 			freeTiles.push([x, y]);
@@ -79,6 +74,12 @@ Dungeon.prototype.generateInn = function(params) {
 	for (var y = 4; y < this.height - 3; y += 3)
 		for (var x = 6; x < this.width - 3; x += 4)
 			placeTable(x, y);
+
+	// Barrels
+	this.setTile(1, Math.floor(this.height / 2), TILES.barrel, Dungeon.LAYER_STATIC);
+
+	// Door
+	this.setTile(this.width - 1, Math.floor(this.height / 2), TILES.door_wood, Dungeon.LAYER_STATIC);
 
 	shuffle(freeTiles);
 	this.start = freeTiles.pop();

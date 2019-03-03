@@ -261,8 +261,12 @@ var TILES = {
 		tileCoords: [ 16, 3 ], walkable: false, transparent: true,
 		desc: "Cupboard"
 	},
-	table: {
+	counter: {
 		tileCoords: [ 14, 1 ], walkable: false, transparent: true,
+		desc: "Table"
+	},
+	table: {
+		tileCoords: [ 16, 13 ], walkable: false, transparent: true,
 		desc: "Table"
 	},
 	chair_left: {
@@ -479,7 +483,7 @@ var LEVELS = [
 		wall: [ TILES.wall_logs ],
 		floor: [ TILES.floor_wood ],
 		table: [ TILES.table ],
-		counter: [ TILES.table ],
+		counter: [ TILES.counter ],
 		chair: [ TILES.chair_left, TILES.chair_right ],
 		decor: [ TILES.cupboard, TILES.pot ],
 		decorAmount: 10,
