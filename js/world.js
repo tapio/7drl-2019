@@ -5,8 +5,6 @@ function World() {
 	"use strict";
 	this.maps = [ new Dungeon(0, LEVELS[0]) ];
 	this.dungeon = this.maps[0];
-	this.scheduler = new ROT.Scheduler.Speed();
-	this.currentActor = null;
 	this.roundTimer = 0;
 	this.running = false;
 	this.mapChanged = false;
@@ -18,22 +16,14 @@ function World() {
 					debugDisplay.draw(i, j, "#");
 }
 
-World.prototype.resetScheduler = function() {
-	this.scheduler.clear();
-	for (var i = 0; i < this.dungeon.actors.length; ++i)
-		this.scheduler.add(this.dungeon.actors[i], true);
-};
-
 World.prototype.addActor = function(actor) {
 	this.dungeon.actors.push(actor);
 	this.dungeon.update();
-	this.resetScheduler();
 	this.running = true;
 };
 
 World.prototype.start = function() {
 	this.dungeon.update();
-	this.resetScheduler();
 	this.running = true;
 };
 
@@ -43,33 +33,27 @@ World.prototype.update = function(dt) {
 	this.dungeon.animate(dt);
 	if (Date.now() < this.roundTimer || !this.dungeon.actors.length)
 		return;
-	if (!this.currentActor)
-		this.currentActor = this.scheduler.next();
-	while (!this.mapChanged && this.currentActor.act()) {
-		this.currentActor.stats.turns++;
-		if (this.currentActor.health <= 0) {
-			removeElem(this.dungeon.actors, this.currentActor);
-			this.scheduler.remove(this.currentActor);
-			if (this.currentActor == ui.actor) {
-				this.running = false;
-				ui.die();
-				return;
-			}
-		}
+	var actors = this.dungeon.actors;
+	for (var i = 0, l = actors.length; i < l; i++) {
+		var currentActor = actors[i];
+		currentActor.stats.turns++;
+		if (currentActor.health <= 0)
+			continue;
+		currentActor.act();
 		this.dungeon.update();
-		this.currentActor = this.scheduler.next();
-		if (this.currentActor == ui.actor) {
-			this.roundTimer = Date.now() + CONFIG.playerRoundDelay;
-			this.currentActor.updateVisibility();
-			break; // Always wait for next round after player action
-		} else if (ui.actor.visibility(this.currentActor.pos[0], this.currentActor.pos[1]) > 0.9 &&
-			distSq(this.currentActor.pos[0], this.currentActor.pos[1], ui.actor.pos[0], ui.actor.pos[1]) <
-				ui.actor.vision * ui.actor.vision) // Dist check needed because of Monster Mind perk
-		{
-			this.roundTimer = Date.now() + CONFIG.enemyRoundDelay;
+		if (this.mapChanged)
 			break;
-		}
 	}
+	// Reap the dead
+	this.dungeon.actors = actors.filter(function(elem) { return elem.health > 0; });
+	// Check player death
+	if (ui.actor && ui.actor.health <= 0) {
+		this.running = false;
+		ui.die();
+		return;
+	}
+
+	this.roundTimer = Date.now() + CONFIG.playerRoundDelay;
 	this.mapChanged = false;
 };
 
@@ -96,7 +80,6 @@ World.prototype.changeMap = function(actor, entrance) {
 	//if (this.dungeon.mobProtos.length && this.dungeon.actors.length < 5) {
 	//	this.dungeon.spawnMobs(randInt(4, 7));
 	//}
-	this.resetScheduler();
 	this.mapChanged = true;
 	if (entrance.mapParams.desc)
 		ui.msg(entrance.mapParams.desc, actor, "feat");
