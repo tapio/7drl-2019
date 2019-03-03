@@ -61,11 +61,6 @@ Dungeon.prototype.generateInn = function(params) {
 			this.setTile(x, y, params.counter.random(), Dungeon.LAYER_STATIC);
 			return;
 		}
-		// Tables
-		if (x > 5 && x < this.width - 3 && (x % 3) == 0 && y > 2 && y < this.height - 3 && (y % 3) == 1) {
-			this.setTile(x, y, params.counter.random(), Dungeon.LAYER_STATIC);
-			return;
-		}
 		// Barrels
 		if (x == 1 && y == Math.floor(this.height / 2)) {
 			this.setTile(x, y, TILES.barrel, Dungeon.LAYER_STATIC);
@@ -75,6 +70,16 @@ Dungeon.prototype.generateInn = function(params) {
 		if (y == 1 || y == this.height - 2)
 			freeTiles.push([x, y]);
 	}).bind(this));
+
+	var placeTable = (function(x, y) {
+		this.setTile(x-1, y, params.chair[0], Dungeon.LAYER_STATIC);
+		this.setTile(x+0, y, params.table.random(), Dungeon.LAYER_STATIC);
+		this.setTile(x+1, y, params.chair[1], Dungeon.LAYER_STATIC);
+	}).bind(this);
+	for (var y = 4; y < this.height - 3; y += 3)
+		for (var x = 6; x < this.width - 3; x += 4)
+			placeTable(x, y);
+
 	shuffle(freeTiles);
 	this.start = freeTiles.pop();
 	this.end = freeTiles.pop();

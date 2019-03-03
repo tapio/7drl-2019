@@ -265,6 +265,14 @@ var TILES = {
 		tileCoords: [ 14, 1 ], walkable: false, transparent: true,
 		desc: "Table"
 	},
+	chair_left: {
+		tileCoords: [ 15, 13 ], walkable: true, transparent: true,
+		desc: "Chair"
+	},
+	chair_right: {
+		tileCoords: [ 17, 13 ], walkable: true, transparent: true,
+		desc: "Chair"
+	},
 
 	barrel: {
 		name: "beer barrel", desc: "Here be beer",
@@ -472,6 +480,7 @@ var LEVELS = [
 		floor: [ TILES.floor_wood ],
 		table: [ TILES.table ],
 		counter: [ TILES.table ],
+		chair: [ TILES.chair_left, TILES.chair_right ],
 		decor: [ TILES.cupboard, TILES.pot ],
 		decorAmount: 10,
 		mobs: [ MOBS.goblin ],
