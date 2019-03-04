@@ -70,7 +70,7 @@ AI.prototype.interactWithMe = function(other) {
 		}
 		case PatronState.WantToOrder: {
 			this.order = randProp(DRINKS);
-			ui.msg(this.actor.name + ": I'd like " + this.order.name, this.actor);
+			ui.msg(this.actor.name + ": I'd like " + this.order.name, other);
 			this.actor.say([ TILES[this.order.id] ]);
 			this.handleSatisfaction(AICONFIG.WantToOrder);
 			this.changeState(PatronState.WaitingDelivery);
@@ -81,8 +81,8 @@ AI.prototype.interactWithMe = function(other) {
 			var item = other.items.find(function(elem) { return elem.id == orderId; });
 			if (item) {
 				removeElem(other.items, item);
-				ui.msg("You give " + item.name + " to " + this.actor.name + ".", this.actor);
-				ui.msg(this.actor.name + ": Thanks!", this.actor);
+				ui.msg("You give " + item.name + " to " + this.actor.name + ".", other);
+				ui.msg(this.actor.name + ": Thanks!", other);
 				var satisfactionLevel = this.handleSatisfaction(AICONFIG.WaitingDelivery);
 				this.actor.say(AICONFIG.emotes[satisfactionLevel]);
 				this.drunkenness++;
@@ -92,7 +92,7 @@ AI.prototype.interactWithMe = function(other) {
 				this.changeState(PatronState.Content);
 			} else {
 				// Reasking/wrong delivery is not cool
-				ui.msg(this.actor.name + ": Where is my " + this.order.name + "!", this.actor);
+				ui.msg(this.actor.name + ": Where is my " + this.order.name + "!", other);
 				this.satisfaction--;
 				game.reputation--;
 				this.actor.say([ TILES[this.order.id], TILES.ui_question ]);
