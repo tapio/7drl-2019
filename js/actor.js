@@ -16,17 +16,9 @@ function Actor(x, y, def) {
 	this.health = def.health || 3;
 	this.maxHealth = this.health;
 	this.dexterity = def.dexterity || 0.5;
-	this.satisfaction = 0;
-	this.thirst = 0;
-	this.hunger = 0;
-	this.drunkenness = 0;
-	this.order = null;
 	this.items = [];
 	this.maxItems = 1;
-	this.ai = !def.ai ? null : {
-		type: def.ai,
-		target: null
-	};
+	this.ai = !def.ai ? null : new AI(this);
 	this.sayMsg = null;
 	this.sayTimeout = 0;
 	this.faction = def.ai ? 0 : 1;
@@ -181,26 +173,9 @@ Actor.prototype.attack = function(target) {
 
 Actor.prototype.interact = function(target) {
 	this.animPos = lerpVec2(this.pos, target.pos, 0.3);
-	if (target.order) {
-		var item = this.items.find(function(elem) { return elem.id == target.order.id; });
-		if (item) {
-			removeElem(this.items, item);
-			target.order = null;
-			ui.msg("You give " + item.name + " to " + target.name + ".", this);
-			ui.msg(target.name + ": Thanks!", this);
-			target.say([ TILES.ui_thanks ]);
-			target.satisfaction++;
-			ui.snd("powerup", this);
-		} else {
-			ui.msg(target.name + ": Where is my " + target.order.name + "!", this);
-			target.satisfaction--;
-			target.say([ TILES[target.order.id], TILES.ui_question ]);
-		}
-		return;
+	if (target.ai) {
+		target.ai.interactWithMe(this);
 	}
-	target.order = randProp(DRINKS);
-	target.say([ TILES[target.order.id] ]);
-	ui.msg(target.name + ": I'd like " + target.order.name, this);
 };
 
 Actor.prototype.say = function(msg, timeout) {
@@ -225,57 +200,11 @@ Actor.prototype.act = function() {
 	}
 
 	if (this.ai)
-		return this.patronAI();
+		return this.ai.act();
 
 	if (this.doPath(true, true)) {
 		this.updateVisibility();
 		return true;
 	}
 	return true; // Can't wait in MP
-};
-
-Actor.prototype.drunkAI = function() {
-	var dx = randInt(-1, 1);
-	var dy = randInt(-1, 1);
-	var newPos = [ this.pos[0] + dx, this.pos[1] + dy ];
-	if (world.dungeon.getPassable(newPos[0], newPos[1])) {
-		this.path.push(newPos);
-		this.doPath(false, false);
-	}
-	return true;
-};
-
-Actor.prototype.patronAI = function() {
-	if (!this.ai.target) {
-		var chair = randElem(world.dungeon.chairs);
-		if (chair) {
-			this.ai.target = chair;
-		} else {
-			return this.drunkAI();
-		}
-	}
-	var target = this.ai.target;
-	this.moveTo(target[0], target[1]);
-	this.doPath(false, false);
-	return true;
-};
-
-Actor.prototype.hunterAI = function() {
-	if (!this.ai.target) {
-		var newTarget = ui.actor; // TODO: Other possibilities?
-		this.updateVisibility();
-		if (this.visibility(newTarget.pos[0], newTarget.pos[1]) < 1) {
-			return this.drunkAI();
-		} else if (newTarget.stealth) {
-			var d = Math.round(dist(this.pos[0], this.pos[1], newTarget.pos[0], newTarget.pos[1]));
-			if (d > Math.max(2, this.vision - newTarget.stealth))
-				return this.drunkAI();
-		}
-		this.ai.target = ui.actor;
-	}
-	var target = this.ai.target;
-	var tx = target.pos[0], ty = target.pos[1];
-	this.moveTo(target.pos[0], target.pos[1]);
-	this.doPath(false, false);
-	return true;
 };

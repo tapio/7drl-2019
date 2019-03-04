@@ -319,18 +319,48 @@ var TILES = {
 		tileCoords: [ 8, 15 ], walkable: true, transparent: true,
 		drink: true
 	},
+	wine: {
+		name: "wine", desc: "A glass of wine",
+		tileCoords: [ 9, 15 ], walkable: true, transparent: true,
+		drink: false // TODO: Waiting for barrel
+	},
+	champagne: {
+		name: "champagne", desc: "A bottle of champagne",
+		tileCoords: [ 10, 15 ], walkable: true, transparent: true,
+		drink: false // TODO: Waiting for barrel
+	},
 
+	ui_attention: {
+		name: "attention", desc: "",
+		tileCoords: [ 17, 15 ], walkable: true, transparent: true
+	},
 	ui_question: {
 		name: "question", desc: "",
 		tileCoords: [ 18, 15 ], walkable: true, transparent: true
 	},
+	ui_love: {
+		name: "love", desc: "",
+		tileCoords: [ 23, 15 ], walkable: true, transparent: true
+	},
 	ui_thanks: {
 		name: "thanks", desc: "",
-		tileCoords: [ 23, 15 ], walkable: true, transparent: true
+		tileCoords: [ 20, 15 ], walkable: true, transparent: true
 	},
 	ui_plus: {
 		name: "plus", desc: "",
 		tileCoords: [ 20, 15 ], walkable: true, transparent: true
+	},
+	ui_disappointed: {
+		name: "disappointed", desc: "",
+		tileCoords: [ 21, 15 ], walkable: true, transparent: true
+	},
+	ui_angry: {
+		name: "angry", desc: "",
+		tileCoords: [ 14, 15 ], walkable: true, transparent: true
+	},
+	ui_ill: {
+		name: "ill", desc: "",
+		tileCoords: [ 15, 15 ], walkable: true, transparent: true
 	},
 
 	player_male: {
