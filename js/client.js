@@ -16,6 +16,7 @@ function Client(params) {
 
 	this.socket.onopen = (function() {
 		ui.msg("Connection established!");
+		ui.msg("Game id: " + this.game);
 		if (params.host) {
 			this.send({ type: "create", game: this.game, data: world.dungeon.serialize() });
 		}
