@@ -393,8 +393,8 @@ UI.prototype.update = function() {
 
 UI.prototype.render = function(camera, dungeon) {
 	if (!this.actor) {
-		camera.pos[0] = dungeon.start[0] - camera.center[0];
-		camera.pos[1] = dungeon.start[1] - camera.center[1];
+		camera.pos[0] = ((dungeon.width / 2)|0) - camera.center[0];
+		camera.pos[1] = ((dungeon.height / 2)|0) - camera.center[1];
 		world.dungeon.draw(camera, this.display, {
 			visibility: function(x, y) {
 				return (x < 0 || y < 0 || x >= dungeon.width || y >= dungeon.height) ? 0 : 1;
