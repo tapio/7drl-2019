@@ -2,8 +2,8 @@ var CONFIG = {
 	tileSize: 16,
 	tileGap: 0,
 	debug: false,
-	playerRoundDelay: 140,
-	enemyRoundDelay: 100,
+	roundDelay: 140,
+	dayDuration: 3*60, // seconds
 	playerMoveDuration: 130,
 	enemyMoveDuration: 100,
 	animFrameDuration: 64,

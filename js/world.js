@@ -8,6 +8,7 @@ function World() {
 	this.roundTimer = 0;
 	this.running = false;
 	this.mapChanged = false;
+	this.timeLeft = CONFIG.dayDuration;
 
 	if (debugDisplay)
 		for (var j = 0; j < this.dungeon.height; ++j)
@@ -24,6 +25,7 @@ World.prototype.addActor = function(actor) {
 
 World.prototype.start = function() {
 	this.dungeon.update();
+	this.timeLeft = CONFIG.dayDuration;
 	this.running = true;
 };
 
@@ -31,6 +33,11 @@ World.prototype.update = function(dt) {
 	if (!this.running)
 		return;
 	this.dungeon.animate(dt);
+	this.timeLeft -= dt;
+	if (this.timeLeft <= 0) {
+		this.running = false;
+		ui.end();
+	}
 	if (Date.now() < this.roundTimer || !this.dungeon.actors.length)
 		return;
 	var actors = this.dungeon.actors;
@@ -49,11 +56,11 @@ World.prototype.update = function(dt) {
 	// Check player death
 	if (ui.actor && ui.actor.health <= 0) {
 		this.running = false;
-		ui.die();
+		ui.end();
 		return;
 	}
 
-	this.roundTimer = Date.now() + CONFIG.playerRoundDelay;
+	this.roundTimer = Date.now() + CONFIG.roundDelay;
 	this.mapChanged = false;
 };
 

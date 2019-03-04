@@ -23,8 +23,13 @@
 		UI:  <span id="time-ui"></span>
 	</div>
 
-	<a href="#menu" id="menu-open" class="btn btn-square corner" title="Menu">≡</a>
+	<div id="status" class="hidden">
+			<div class="status-text">Time left: <span id="time-left">00:00</span></div><br/>
+			<!--<div class="status-text"><span id=""></span></div><br/>-->
+	</div>
+	<div id="messages"></div>
 
+	<a href="#menu" id="menu-open" class="btn btn-square corner" title="Menu">≡</a>
 	<div id="menu" class="modal">
 		<a href="#game" class="btn btn-square corner">✕</a>
 		<div class="menu">
@@ -41,11 +46,6 @@
 			<p class="footer">Copyright &copy; 2019 Tapio Vierros</p>
 		</div>
 	</div>
-	<div id="status">
-		<div class="sprite depth"></div> <span id="depth"></span><br/>
-		<div class="sprite coin"></div> <span id="coins"></span><br/>
-	</div>
-	<div id="messages"></div>
 
 	<div id="main" class="modal">
 		<div class="menu center">
@@ -98,29 +98,12 @@
 		</div>
 	</div>
 
-	<div id="death" class="modal">
+	<div id="end" class="modal">
 		<div class="menu">
-			<h1>You Have Died!</h1>
-			<p>Before your demise on level <span id="death-depth"></span>,
-			you managed to kill <span id="death-kills"></span> creatures
-			and survive for <span id="death-turns"></span> turns.</p>
-			<p>During your journey you collected <span id="death-coins"></span>
-			coins</p>
+			<h1>The Day Has Ended!</h1>
+			<p>TIme to sleep.</p>
 			<div>
-				<div id="death-restart" class="btn btn-text">Restart</div>
-			</div>
-		</div>
-	</div>
-
-	<div id="win" class="modal">
-		<div class="menu">
-			<h1>Glorious Victory!</h1>
-			<p>After <span id="win-turns"></span> turns your adventure
-			ended in triumph at dungeon depth <span id="win-depth"></span>.
-			Before that, you slaughtered <span id="win-kills"></span> creatures
-			and collected <span id="win-coins"></span> coins.</p>
-			<div>
-				<div id="win-restart" class="btn btn-text">Again!</div>
+				<div id="end-restart" class="btn btn-text">Again!</div>
 			</div>
 		</div>
 	</div>

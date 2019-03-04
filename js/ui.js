@@ -13,9 +13,8 @@ function UI(player) {
 	this.playerName = "Noname";
 	this.dom = {
 		fps: $("#fps"),
-		depth: $("#depth"),
-		coins: $("#coins"),
-		messages: $("#messages")
+		messages: $("#messages"),
+		timeLeft: $("#time-left")
 	};
 	// Load settings
 	var savedSettings = window.localStorage.getItem("SETTINGS");
@@ -123,11 +122,8 @@ function UI(player) {
 	$("#pausemenu-restart").addEventListener("click", function() {
 		window.location.reload();
 	}, false);
-	$("#death-restart").addEventListener("click", function() {
-		window.location.reload();
-	}, false);
-	$("#win-restart").addEventListener("click", function() {
-		window.location.reload();
+	$("#end-restart").addEventListener("click", function() {
+		window.location.reload(); // TODO: More graceful restart preserving players
 	}, false);
 	$("#new-male").addEventListener("click", function() {
 		this.classList.add("btn-selected");
@@ -168,6 +164,7 @@ function UI(player) {
 			}
 		}
 		world.start();
+		$("#status").classList.remove("hidden");
 
 		// "Liberate" sounds in user gesture so that they work on mobile
 		for (var sound in SOUNDS) {
@@ -193,7 +190,7 @@ function UI(player) {
 			window.location.hash = "#main";
 			return;
 		}
-		if (hash == "#win" || hash == "#death") {
+		if (hash == "#end") {
 			window.location.hash = "#game";
 			return;
 		}
@@ -370,11 +367,17 @@ UI.prototype.update = function() {
 
 	this.dom.fps.innerHTML = Math.round(this.fps);
 
+	var minutes = Math.floor(world.timeLeft / 60);
+	var seconds = Math.floor(world.timeLeft - minutes * 60);
+	if (world.timeLeft <= 0)
+		this.dom.timeLeft.innerHTML = "0";
+	else if (minutes > 0)
+		this.dom.timeLeft.innerHTML = minutes + ":" + (seconds < 10 ? "0" : "") + seconds;
+	else
+		this.dom.timeLeft.innerHTML = seconds;
+
 	if (!this.actor)
 		return;
-
-	this.dom.depth.innerHTML = world.dungeon.id;
-	//this.dom.coins.innerHTML = this.actor.coins;
 
 	if (!CONFIG.touch) {
 		var cursor = "default";
@@ -414,22 +417,8 @@ UI.prototype.render = function(camera, dungeon) {
 	world.dungeon.draw(camera, this.display, this.actor);
 };
 
-UI.prototype.die = function() {
+UI.prototype.end = function() {
 	var stats = ui.actor.stats;
-	$("#death-turns").innerHTML = Math.round(stats.turns);
-	$("#death-kills").innerHTML = Math.round(stats.kills);
-	//$("#death-depth").innerHTML = Math.round(world.dungeon.id);
-	//$("#death-coins").innerHTML = Math.round(stats.coins);
-	$("#death").style.display = "block";
-	world.running = false;
-};
-
-UI.prototype.win = function() {
-	var stats = ui.actor.stats;
-	$("#win-turns").innerHTML = Math.round(stats.turns);
-	$("#win-kills").innerHTML = Math.round(stats.kills);
-	//$("#win-depth").innerHTML = Math.round(world.dungeon.id);
-	//$("#win-coins").innerHTML = Math.round(stats.coins);
-	$("#win").style.display = "block";
+	$("#end").style.display = "block";
 	world.running = false;
 };
