@@ -1,7 +1,7 @@
 
 function Actor(x, y, def) {
 	def = def || {};
-	this.id = def.id || null;
+	this.id = def.id || ("A" + (Actor.nextGeneratedId++));
 	this.name = def.name || "Player";
 	this.desc = def.desc || "Unknown";
 	this.pos = [ x || 0, y || 0 ];
@@ -29,6 +29,8 @@ function Actor(x, y, def) {
 	this.done = false;
 	this.moved = false;
 }
+
+Actor.nextGeneratedId = 1;
 
 // Getter needed for ROT.Scheduler.Speed
 Actor.prototype.getSpeed = function() {
@@ -68,8 +70,8 @@ Actor.prototype.moveTo = function(x, y) {
 	}
 	if (!world.dungeon.getPassable(x, y)) return false;
 	if (world.dungeon.findPath(x, y, this)) {
-		if (this.client)
-			this.client.update();
+		if (ui.client && (this == ui.actor || (CONFIG.host && !!this.ai)))
+			ui.client.sendPosition(this);
 		return true;
 	}
 	return false;
@@ -178,9 +180,16 @@ Actor.prototype.interact = function(target) {
 	}
 };
 
-Actor.prototype.say = function(msg, timeout) {
+Actor.prototype.say = function(msg) {
+	this.sayUnsynced(msg);
+	if (ui.client)
+		ui.client.sendSay(this);
+}
+
+Actor.prototype.sayUnsynced = function(msg) {
 	this.sayMsg = msg;
-	this.sayTimeout = timeout || 10;
+	this.sayTimeout = CONFIG.sayDuration;
+	world.dungeon.needsRender = true;
 }
 
 Actor.prototype.act = function() {
@@ -188,7 +197,7 @@ Actor.prototype.act = function() {
 		return true;
 
 	if (this.sayMsg) {
-		this.sayTimeout--;
+		this.sayTimeout -= CONFIG.roundDelay;
 		if (this.sayTimeout <= 0) {
 			this.sayMsg = null;
 		}

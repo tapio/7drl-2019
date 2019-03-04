@@ -7,6 +7,8 @@ var CONFIG = {
 	playerMoveDuration: 130,
 	enemyMoveDuration: 100,
 	animFrameDuration: 64,
+	sayDuration: 2000,
+	host: true,
 	server: typeof window === "undefined",
 	touch: typeof navigator !== "undefined" && (/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent))
 };
@@ -478,6 +480,7 @@ var IMGS = {
 })();
 
 
+// Don't add ids to mobs, as they will be generated for uniqueness
 var MOBS = {
 	skeleton: {
 		name: "Skeleton", ch: TILES.skeleton.ch, ai: "hunter",
@@ -498,11 +501,6 @@ var MOBS = {
 		loot: TILES.coin, lootChance: 0.5
 	},
 };
-
-(function() {
-	for (var i in MOBS)
-		MOBS[i].id = i;
-})();
 
 
 var SOUNDS = {

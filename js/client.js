@@ -50,16 +50,52 @@ function Client(params) {
 					var peer = dungeon.findById(state.id);
 					if (!peer) { // New player?
 						ui.msg("Player " + state.id + " joined.");
-						peer = new Actor();
-						peer.id = state.id;
-						peer.pos[0] = state.pos[0];
-						peer.pos[1] = state.pos[1];
+						peer = new Actor(state.pos[0], state.pos[1], {
+							id: state.id
+						});
 						world.addActor(peer);
+						//FIXME: Horrible hack, fixme
+						if (CONFIG.host && peer.id[0] == "P") {
+							var mobs = [];
+							for (var i = 0; i< dungeon.actors.length; ++i) {
+								var mob = dungeon.actors[i];
+								if (mob.ai) {
+									mobs.push({ id: mob.id, pos: mob.pos });
+								}
+							}
+							this.send({
+								type: "state",
+								data: mobs
+							});
+						}
 					} else {
 						dungeon.findPath(state.pos[0], state.pos[1], peer);
 					}
 				}
 				dungeon.needsRender = true;
+				break;
+			case "say":
+				var actor = dungeon.findById(msg.id);
+				if (actor) {
+					var sayMsg = [];
+					for (var i = 0; i < msg.say.length; i++) {
+						sayMsg.push(TILES[msg.say[i]]);
+					}
+					actor.sayUnsynced(sayMsg);
+				}
+				break;
+			case "ai":
+				var actor = dungeon.findById(msg.id);
+				if (actor && actor.ai) {
+					actor.ai.changeStateUnsynced(msg.state);
+				}
+				break;
+			case "game":
+				var change = msg.change;
+				for (var prop in change) {
+					if (game[prop] !== undefined && change[prop])
+						game[prop] += change[prop];
+				}
 				break;
 			case "open":
 				var door = dungeon.getTile(msg.pos[0], msg.pos[1], Dungeon.LAYER_STATIC);
@@ -96,16 +132,52 @@ function Client(params) {
 	}).bind(this);
 };
 
-Client.prototype.update = function() {
-	if (!this.connected || !this.actor.id) return;
+Client.prototype.sendPosition = function(actor) {
+	if (!this.connected) return;
 
-	if (!this.actor.path.length)
+	if (!actor.path.length)
 		return;
 
-	var packet = {
+	this.send({
 		type: "move",
-		id: this.id,
-		pos: last(this.actor.path)
-	};
-	this.send(packet);
+		id: actor.id,
+		pos: last(actor.path)
+	});
 };
+
+Client.prototype.sendSay = function(actor) {
+	if (!this.connected) return;
+
+	if (!actor.sayMsg)
+		return;
+
+	var sayArr = [];
+	for (var i = 0; i < actor.sayMsg.length; i++) {
+		sayArr.push(actor.sayMsg[i].id);
+	}
+	this.send({
+		type: "say",
+		id: actor.id,
+		say: sayArr
+	});
+};
+
+Client.prototype.sendAIState = function(actor) {
+	if (!this.connected) return;
+
+	this.send({
+		type: "ai",
+		id: actor.id,
+		state: actor.ai.state
+	});
+};
+
+Client.prototype.sendGameStateUpdate = function(change) {
+	if (!this.connected) return;
+
+	this.send({
+		type: "game",
+		change: change
+	});
+};
+

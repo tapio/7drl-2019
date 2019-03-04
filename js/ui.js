@@ -11,6 +11,7 @@ function UI(player) {
 	this.hostingChoice = null;
 	this.gameName = "";
 	this.playerName = "Noname";
+	this.client = null;
 	this.dom = {
 		fps: $("#fps"),
 		messages: $("#messages"),
@@ -140,8 +141,10 @@ function UI(player) {
 		validateNewGame();
 	}, false);
 	$("#new-ok").addEventListener("click", function() {
+		CONFIG.host = ui.hostingChoice !== "join";
 		if (ui.hostingChoice !== "host-only") {
 			var def = {
+				id: "NOT_SET",
 				name: ui.playerName,
 				desc: "That's you!",
 				ch: TILES[ui.characterChoice].ch,
@@ -153,17 +156,12 @@ function UI(player) {
 		}
 		if (ui.hostingChoice !== "solo") {
 			var clientParams = {
-				host: ui.hostingChoice !== "join",
+				host: CONFIG.host,
 				join: ui.hostingChoice !== "host-only",
 				game: ui.gameName,
 				actor: ui.actor
 			}
-			if (ui.actor) {
-				ui.actor.client = new Client(clientParams);
-			} else {
-				// TODO: Need to relocate for hosting only
-				ui.client = new Client(clientParams);
-			}
+			ui.client = new Client(clientParams);
 		}
 		world.start();
 		$("#status").classList.remove("hidden");

@@ -23,7 +23,8 @@ var AICONFIG = {
 	},
 	WaitingDelivery: {
 		timing: [ 5, 10, 15, 20, 999999 ],
-		satisfaction: [ 5, 2, -2, -4, -6 ]
+		satisfaction: [ 5, 2, -2, -4, -6 ],
+		gold: [ 1, 1, 1, 1, 1 ]
 	},
 	emotes: [
 		[ TILES.ui_love ],
@@ -47,6 +48,13 @@ function AI(actor) {
 }
 
 AI.prototype.changeState = function(newState) {
+	this.changeStateUnsynced(newState);
+	if (CONFIG.host && ui.client) {
+		ui.client.sendAIState(this.actor);
+	}
+};
+
+AI.prototype.changeStateUnsynced = function(newState) {
 	this.state = newState;
 	this.stateTime = 0;
 };
@@ -55,8 +63,13 @@ AI.prototype.handleSatisfaction = function(config) {
 	for (var i = 0; i < config.timing.length; ++i) {
 		if (this.stateTime < config.timing[i]) {
 			var satisfaction = config.satisfaction[i];
+			var gold = config.gold ? config.gold[i] : 0;
 			this.satisfaction += satisfaction;
 			game.reputation += satisfaction;
+			game.gold += gold;
+			if (ui.client) {
+				ui.client.sendGameStateUpdate({reputation: satisfaction, gold: gold});
+			}
 			return i;
 		}
 	}
@@ -77,6 +90,10 @@ AI.prototype.interactWithMe = function(other) {
 			break;
 		}
 		case PatronState.WaitingDelivery: {
+			if (!this.order) {
+				console.log("TODO: No order sycing yet!");
+				break;
+			}
 			var orderId = this.order.id;
 			var item = other.items.find(function(elem) { return elem.id == orderId; });
 			if (item) {
@@ -86,7 +103,6 @@ AI.prototype.interactWithMe = function(other) {
 				var satisfactionLevel = this.handleSatisfaction(AICONFIG.WaitingDelivery);
 				this.actor.say(AICONFIG.emotes[satisfactionLevel]);
 				this.drunkenness++;
-				game.gold++;
 				ui.snd("powerup", this.actor);
 				this.order = null;
 				this.changeState(PatronState.Content);
@@ -108,6 +124,13 @@ AI.prototype.interactWithMe = function(other) {
 
 AI.prototype.act = function() {
 	this.stateTime += CONFIG.roundDelay / 1000;
+
+	if (!CONFIG.host) {
+		if (this.actor.doPath(false, false)) {
+			this.actor.updateVisibility();
+		}
+		return;
+	}
 
 	switch (this.state) {
 		case PatronState.Moving: {

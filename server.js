@@ -126,9 +126,9 @@ server.on('connection', function(ws) {
 			case "ping":
 				ws.send('{"type":"pong"}');
 				break;
-			// Unknown
+			// Unknown, just pass it along
 			default:
-				if (VERBOSITY > 0) console.log("Unknown message:", msg);
+				pl.broadcast(msg, false);
 				break;
 		}
 	});
