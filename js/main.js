@@ -1,5 +1,10 @@
 var camera, ui, world; // Globals
 
+var game = {
+	gold: 0,
+	reputation: 0
+};
+
 window.onload = function() {
 	try {
 		camera = {};

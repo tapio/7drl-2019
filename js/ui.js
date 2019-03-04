@@ -14,7 +14,9 @@ function UI(player) {
 	this.dom = {
 		fps: $("#fps"),
 		messages: $("#messages"),
-		timeLeft: $("#time-left")
+		timeLeft: $("#time-left"),
+		gold: $("#gold"),
+		reputation: $("#reputation")
 	};
 	// Load settings
 	var savedSettings = window.localStorage.getItem("SETTINGS");
@@ -375,6 +377,9 @@ UI.prototype.update = function() {
 		this.dom.timeLeft.innerHTML = minutes + ":" + (seconds < 10 ? "0" : "") + seconds;
 	else
 		this.dom.timeLeft.innerHTML = seconds;
+
+	this.dom.gold.innerHTML = Math.round(game.gold);
+	this.dom.reputation.innerHTML = Math.round(game.reputation);
 
 	if (!this.actor)
 		return;

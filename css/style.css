@@ -279,6 +279,22 @@ h1 {
 	user-select: none;
 }
 
+.status-item {
+	display: inline-block;
+	padding: 0 40px;
+}
+
+@media (max-width: 600px), (max-height: 500px) {
+	#status {
+		font-size: 20px;
+		text-align: left;
+	}
+	.status-item {
+		display: block;
+		padding: 0 10px;
+	}
+}
+
 .sprite {
 	background-image: url(../assets/tileset.png);
 	background-repeat: no-repeat;
