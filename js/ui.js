@@ -425,5 +425,7 @@ UI.prototype.render = function(camera, dungeon) {
 UI.prototype.end = function() {
 	var stats = ui.actor.stats;
 	$("#end").style.display = "block";
+	$("#end-gold").innerHTML = game.gold;
+	$("#end-reputation").innerHTML = game.reputation;
 	world.running = false;
 };
