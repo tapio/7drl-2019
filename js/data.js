@@ -53,6 +53,26 @@ var TILES = {
 		tileCoords: [ 1, 1 ], walkable: true, transparent: true,
 		desc: "Wooden floor"
 	},
+	floor_dirt_dunes: {
+		tileCoords: [ 5, 7 ], walkable: true, transparent: true,
+		desc: "Dirt"
+	},
+	floor_dirt_a: {
+		tileCoords: [ 23, 13 ], walkable: true, transparent: true,
+		desc: "Dirt"
+	},
+	floor_dirt_b: {
+		tileCoords: [ 24, 13 ], walkable: true, transparent: true,
+		desc: "Dirt"
+	},
+	floor_dirt_c: {
+		tileCoords: [ 23, 14 ], walkable: true, transparent: true,
+		desc: "Dirt"
+	},
+	floor_dirt_d: {
+		tileCoords: [ 24, 14 ], walkable: true, transparent: true,
+		desc: "Dirt"
+	},
 	floor_sand_a: {
 		tileCoords: [ 0, 3 ], walkable: true, transparent: true,
 		desc: "Sand"
@@ -170,21 +190,14 @@ var TILES = {
 		desc: "Rocky wall"
 	},
 	wall_logs: {
-		tileCoords: [ 6, 5 ], walkable: false, transparent: false,
+		tileCoords: [ 7, 4 ], walkable: false, transparent: false,
 		desc: "Log wall"
 	},
-	wall_water: {
-		tileCoords: [ 7, 2 ], walkable: false, transparent: true,
-		desc: "Water"
+	wall_logs_thin: {
+		tileCoords: [ 6, 4 ], walkable: false, transparent: false,
+		desc: "Log wall"
 	},
-	wall_lava: {
-		tileCoords: [ 4, 12 ], walkable: false, transparent: true,
-		desc: "Hot lava"
-	},
-	wall_lava2: {
-		tileCoords: [ 5, 12 ], walkable: false, transparent: true,
-		desc: "Hot lava"
-	},
+
 	door_wood: {
 		tileCoords: [ 8, 0 ], walkable: true, transparent: false,
 		desc: "Closed wooden door, can be opened"
@@ -213,6 +226,14 @@ var TILES = {
 	pot: {
 		tileCoords: [ 12, 0 ], walkable: true, transparent: true,
 		desc: "Clay pot"
+	},
+	pot_damaged: {
+		tileCoords: [ 12, 1 ], walkable: true, transparent: true,
+		desc: "Clay pot"
+	},
+	pot_broken: {
+		tileCoords: [ 12, 3 ], walkable: true, transparent: true,
+		desc: "Clay pot remains"
 	},
 	chest: {
 		tileCoords: [ 11, 0 ], walkable: true, transparent: true,
@@ -267,16 +288,28 @@ var TILES = {
 		tileCoords: [ 14, 1 ], walkable: false, transparent: true,
 		desc: "Table"
 	},
-	table: {
+	table_worn: {
 		tileCoords: [ 16, 13 ], walkable: false, transparent: true,
 		desc: "Table"
 	},
-	chair_left: {
+	chair_worn_left: {
 		tileCoords: [ 15, 13 ], walkable: true, transparent: true,
 		desc: "Chair"
 	},
-	chair_right: {
+	chair_worn_right: {
 		tileCoords: [ 17, 13 ], walkable: true, transparent: true,
+		desc: "Chair"
+	},
+	table: {
+		tileCoords: [ 16, 14 ], walkable: false, transparent: true,
+		desc: "Table"
+	},
+	chair_left: {
+		tileCoords: [ 15, 14 ], walkable: true, transparent: true,
+		desc: "Chair"
+	},
+	chair_right: {
+		tileCoords: [ 17, 14 ], walkable: true, transparent: true,
 		desc: "Chair"
 	},
 
@@ -546,9 +579,27 @@ var LEVELS = [
 		generator: "inn",
 		width: 20,
 		height: 15,
-		wallOnStaticLayer: true,
 		wall: [ TILES.wall_logs ],
-		floor: [ TILES.floor_wood ],
+		XXXfloor: [ TILES.floor_dirt_a, TILES.floor_dirt_b, TILES.floor_dirt_c, TILES.floor_dirt_d ],
+		floor: [ TILES.floor_dirt_dunes ],
+		table: [ TILES.table_worn ],
+		counter: [ TILES.counter ],
+		chair: [ TILES.chair_worn_left, TILES.chair_worn_right ],
+		decor: [ TILES.pot, TILES.pot_damaged, TILES.pot_broken ],
+		decorAmount: 10,
+		mobs: [ MOBS.goblin ],
+		mobAmount: 2,
+		items: [ ],
+		itemAmount: 0
+	},{
+		name: "Inn",
+		desc: "The Pranching Pony",
+		generator: "inn",
+		width: 20,
+		height: 15,
+		wallOnStaticLayer: true,
+		wall: [ TILES.wall_stone2 ],
+		floor: [ TILES.floor_marble_a, TILES.floor_marble_b, TILES.floor_marble_c, TILES.floor_marble_d ],
 		table: [ TILES.table ],
 		counter: [ TILES.counter ],
 		chair: [ TILES.chair_left, TILES.chair_right ],

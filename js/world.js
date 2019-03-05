@@ -3,7 +3,7 @@ var debugDisplay; // = new ROT.Display({width: 100, height: 100, fontSize: 6});
 
 function World() {
 	"use strict";
-	this.maps = [ new Dungeon(0, LEVELS[0]) ];
+	this.maps = [ new Dungeon(0, LEVELS[randInt(0, LEVELS.length-1)]) ];
 	this.dungeon = this.maps[0];
 	this.roundTimer = 0;
 	this.running = false;
