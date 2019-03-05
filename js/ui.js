@@ -422,11 +422,16 @@ UI.prototype.render = function(camera, dungeon) {
 		});
 		return;
 	}
-	camera.pos[0] = this.actor.pos[0] - camera.center[0];
-	camera.pos[1] = this.actor.pos[1] - camera.center[1];
+	var xFits = dungeon.width <= camera.center[0] * 2;
+	var yFits = dungeon.height <= camera.center[1] * 2;
+	var refX = xFits ? ((dungeon.width / 2)|0) : this.actor.pos[0];
+	var refY = yFits ? ((dungeon.height / 2)|0) : this.actor.pos[1];
+
+	camera.pos[0] = refX - camera.center[0];
+	camera.pos[1] = refY - camera.center[1];
 	if (this.actor.moved) {
-		camera.offset[0] = this.actor.pos[0] - this.actor.animPos[0];
-		camera.offset[1] = this.actor.pos[1] - this.actor.animPos[1];
+		camera.offset[0] = xFits ? 0 : (this.actor.pos[0] - this.actor.animPos[0]);
+		camera.offset[1] = yFits ? 0 : (this.actor.pos[1] - this.actor.animPos[1]);
 	} else {
 		camera.offset[0] = 0;
 		camera.offset[1] = 0;

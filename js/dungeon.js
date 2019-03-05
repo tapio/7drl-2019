@@ -205,7 +205,6 @@ Dungeon.prototype.draw = function(camera, display, player) {
 	var ctx = display._context;
 	ctx.fillStyle = display._options.bg;
 	ctx.fillRect(0, 0, display._context.canvas.width, display._context.canvas.height);
-	ctx.font = "16px kenney_miniregular monospace";
 
 	var w = display.getOptions().width;
 	var h = display.getOptions().height;
@@ -261,7 +260,6 @@ Dungeon.prototype.draw = function(camera, display, player) {
 	}
 	// Speech bubbles, rendered separately to render on top of everything
 	ctx.fillStyle = "#fff";
-	ctx.textAlign = "center";
 	for (var i = 0, l = sayActors.length; i < l; ++i) {
 		var actor = sayActors[i];
 		var x = actor.animPos[0] - camera.pos[0] + camera.offset[0];
