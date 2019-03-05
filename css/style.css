@@ -278,6 +278,7 @@ h1 {
 	-moz-user-select: none;
 	-ms-user-select: none;
 	user-select: none;
+	pointer-events: none;
 }
 
 .status-item {
@@ -294,13 +295,16 @@ h1 {
 		display: block;
 		padding: 0 10px;
 	}
+	#inv-items {
+		display: block;
+	}
 }
 
 #inv {
 	position: fixed;
 	bottom: 10px;
 	right: 10px;
-	font-size: 32px;
+	font-size: 28px;
 	text-align: right;
 	-webkit-tap-highlight-color: rgba(0, 0, 0, 0);
 	-webkit-touch-callout: none;
@@ -308,6 +312,7 @@ h1 {
 	-moz-user-select: none;
 	-ms-user-select: none;
 	user-select: none;
+	pointer-events: none;
 }
 
 .sprite {
