@@ -1,14 +1,10 @@
-var camera, ui, world; // Globals
-
-var game = {
-	gold: 0,
-	reputation: 0
-};
+var camera, ui, world, game; // Globals
 
 window.onload = function() {
 	try {
 		camera = {};
 		world = new World();
+		game = new Game();
 		ui = new UI(null);
 
 		if (CONFIG.debug) $("#debug").style.display = "block";
