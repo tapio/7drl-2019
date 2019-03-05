@@ -136,11 +136,12 @@ Actor.prototype.doPath = function(checkItems, checkMapChange) {
 
 Actor.prototype.tryPickUp = function(item) {
 	if (this.items.length >= this.maxItems) {
-		ui.msg("Can't carry more items.", this);
-		return false;
+		ui.msg("Can't carry more items, dropping " + this.items[0].name + ".", this);
+		this.items[0] = item;
+	} else {
+		this.items.push(item);
 	}
 	// TODO: Handle multiplayer
-	this.items.push(item);
 	this.say([ TILES.ui_plus, TILES[item.id] ]);
 	ui.msg("Picked up a " + item.name + ".", this);
 	ui.snd("pickup", this);
