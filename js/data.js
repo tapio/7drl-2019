@@ -3,9 +3,8 @@ var CONFIG = {
 	tileGap: 0,
 	debug: false,
 	roundDelay: 140,
-	dayDuration: 3*60, // seconds
 	playerMoveDuration: 130,
-	enemyMoveDuration: 100,
+	enemyMoveDuration: 130,
 	animFrameDuration: 64,
 	sayDuration: 2000,
 	host: true,
@@ -608,7 +607,7 @@ var LEVELS = [
 		decor: [ TILES.pot, TILES.pot_damaged, TILES.pot_broken ],
 		decorAmount: 10,
 		mobs: [ MOBS.goblin ],
-		mobAmount: 2,
+		mobAmount: 0,
 		items: [ ],
 		itemAmount: 0
 	},{
@@ -625,7 +624,7 @@ var LEVELS = [
 		decor: [ TILES.cupboard, TILES.pot ],
 		decorAmount: 10,
 		mobs: [ MOBS.goblin ],
-		mobAmount: 2,
+		mobAmount: 0,
 		items: [ ],
 		itemAmount: 0
 	}

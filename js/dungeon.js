@@ -1,6 +1,7 @@
 
 function Dungeon(id, params) {
 	//ROT.RNG.setSeed(666);
+	this.params = params;
 	this.id = id;
 	this.width = 0;
 	this.height = 0;
@@ -10,6 +11,7 @@ function Dungeon(id, params) {
 	this.map = [];
 	this.start = [0, 0];
 	this.end = [0, 0];
+	this.mobSpawns = [];
 	var generators = {
 		inn: this.generateInn.bind(this)
 	};

@@ -86,7 +86,10 @@ Dungeon.prototype.generateInn = function(params) {
 	}
 
 	// Door
-	this.setTile(this.width - 1, Math.floor(this.height / 2), TILES.door_wood, Dungeon.LAYER_STATIC);
+	var doorx = this.width - 1;
+	var doory = Math.floor(this.height / 2)
+	this.setTile(doorx, doory, TILES.door_wood, Dungeon.LAYER_STATIC);
+	this.mobSpawns.push([doorx, doory]);
 
 	shuffle(freeTiles);
 	this.start = freeTiles.pop();
