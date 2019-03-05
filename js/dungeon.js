@@ -11,7 +11,7 @@ function Dungeon(id, params) {
 	this.start = [0, 0];
 	this.end = [0, 0];
 	var generators = {
-		inn: this.generateInn.bind(this),
+		inn: this.generateInn.bind(this)
 	};
 	Dungeon.totalCount++;
 	var freeTiles = generators[params.generator](params);

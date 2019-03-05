@@ -148,7 +148,7 @@ function UI(player) {
 				id: "NOT_SET",
 				name: ui.playerName,
 				desc: "That's you!",
-				ch: TILES[ui.characterChoice].ch,
+				ch: TILES[ui.characterChoice].ch
 			};
 			var pl = new Actor(world.dungeon.start[0], world.dungeon.start[1], def);
 			pl.updateVisibility();
@@ -161,7 +161,7 @@ function UI(player) {
 				join: ui.hostingChoice !== "host-only",
 				game: ui.gameName,
 				actor: ui.actor
-			}
+			};
 			ui.client = new Client(clientParams);
 		}
 		world.start();

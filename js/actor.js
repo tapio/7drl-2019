@@ -186,13 +186,13 @@ Actor.prototype.say = function(msg) {
 	this.sayUnsynced(msg);
 	if (ui.client)
 		ui.client.sendSay(this);
-}
+};
 
 Actor.prototype.sayUnsynced = function(msg) {
 	this.sayMsg = msg;
 	this.sayTimeout = CONFIG.sayDuration;
 	world.dungeon.needsRender = true;
-}
+};
 
 Actor.prototype.act = function() {
 	if (this.health <= 0)

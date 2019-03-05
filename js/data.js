@@ -552,7 +552,7 @@ var MOBS = {
 		desc: "Scary and semi-dangerous",
 		health: 2, vision: 3, speed: 0.75,
 		loot: TILES.coin, lootChance: 0.5
-	},
+	}
 };
 
 

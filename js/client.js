@@ -130,7 +130,7 @@ function Client(params) {
 		this.connected = false;
 		if (this.actor) this.actor.id = null;
 	}).bind(this);
-};
+}
 
 Client.prototype.sendPosition = function(actor) {
 	if (!this.connected) return;

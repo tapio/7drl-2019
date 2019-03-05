@@ -31,7 +31,7 @@ var AICONFIG = {
 		[ TILES.ui_thanks ],
 		[ TILES.ui_disappointed ],
 		[ TILES.ui_angry ],
-		[ TILES.ui_angry ],
+		[ TILES.ui_angry ]
 	]
 };
 
@@ -120,7 +120,7 @@ AI.prototype.interactWithMe = function(other) {
 			break;
 		}
 	}
-}
+};
 
 AI.prototype.act = function() {
 	this.stateTime += CONFIG.roundDelay / 1000;
@@ -164,7 +164,7 @@ AI.prototype.act = function() {
 		}
 		case PatronState.Content: {
 			if (this.stateTime > AICONFIG.ContentTime) {
-				this.actor.say([ TILES.ui_attention ])
+				this.actor.say([ TILES.ui_attention ]);
 				this.changeState(PatronState.WantToOrder);
 			}
 			break;
