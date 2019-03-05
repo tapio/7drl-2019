@@ -315,22 +315,22 @@ var TILES = {
 
 	barrel_beer: {
 		name: "beer barrel", desc: "Here be beer",
-		tileCoords: [ 15, 2 ], walkable: true, transparent: true,
+		tileCoords: [ 15, 2 ], walkable: false, transparent: true, interactable: true,
 		container: "beer"
 	},
 	barrel_wine: {
 		name: "wine barrel", desc: "Here be wine",
-		tileCoords: [ 15, 2 ], walkable: true, transparent: true,
+		tileCoords: [ 15, 2 ], walkable: false, transparent: true, interactable: true,
 		container: "wine"
 	},
 	barrel_champagne: {
 		name: "champagne barrel", desc: "Here be champagne",
-		tileCoords: [ 15, 2 ], walkable: true, transparent: true,
+		tileCoords: [ 15, 2 ], walkable: false, transparent: true, interactable: true,
 		container: "champagne"
 	},
 	barrel_booze: {
 		name: "booze barrel", desc: "Here be booze",
-		tileCoords: [ 15, 2 ], walkable: true, transparent: true,
+		tileCoords: [ 15, 2 ], walkable: false, transparent: true, interactable: true,
 		container: "booze"
 	},
 

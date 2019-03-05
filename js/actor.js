@@ -62,13 +62,11 @@ Actor.prototype.updateVisibility = function() {
 };
 
 Actor.prototype.moveTo = function(x, y) {
-	//var target = world.dungeon.getTile(x, y);
-	//if (!target.walkable) return;
 	if (x == this.pos[0] && y == this.pos[1]) {
 		this.done = true; // Skip turn
 		return true;
 	}
-	if (!world.dungeon.getPassable(x, y)) return false;
+	if (!world.dungeon.getTargetable(x, y)) return false;
 	if (world.dungeon.findPath(x, y, this)) {
 		if (ui.client && (this == ui.actor || (CONFIG.host && !!this.ai)))
 			ui.client.sendPosition(this);
@@ -86,11 +84,12 @@ Actor.prototype.doPath = function(checkItems, checkMapChange) {
 		this.moved = false;
 		// Pathing
 		var waypoint = this.path.shift();
+		var atDestination = this.path.length === 0;
 		// Check mob
 		var mob = world.dungeon.getTile(waypoint[0], waypoint[1], Dungeon.LAYER_ACTOR);
 		if (mob) {
 			this.path = [];
-			if (this.faction != mob.faction) {
+			if (this.faction != mob.faction && atDestination) {
 				this.interact(mob);
 				return true;
 			}
@@ -98,7 +97,7 @@ Actor.prototype.doPath = function(checkItems, checkMapChange) {
 		}
 		// Check items
 		var item = world.dungeon.getTile(waypoint[0], waypoint[1], Dungeon.LAYER_ITEM);
-		if (checkItems && item && this.path.length === 0) {
+		if (checkItems && item && atDestination) {
 			this.animPos = lerpVec2(this.pos, waypoint, 0.2);
 			if (this.tryPickUp(item)) {
 				world.dungeon.setTile(waypoint[0], waypoint[1], null, Dungeon.LAYER_ITEM);
@@ -114,8 +113,10 @@ Actor.prototype.doPath = function(checkItems, checkMapChange) {
 				world.dungeon.setTile(waypoint[0], waypoint[1], "door_metal_open", Dungeon.LAYER_STATIC);
 				ui.snd("door_open", this);
 			} else if (object.container) {
-				var item = clone(TILES[object.container]);
-				this.tryPickUp(item);
+				if (atDestination) {
+					var item = clone(TILES[object.container]);
+					this.tryPickUp(item);
+				}
 				return true;
 			}
 		}
@@ -123,9 +124,9 @@ Actor.prototype.doPath = function(checkItems, checkMapChange) {
 		this.pos[1] = waypoint[1];
 		this.moved = true;
 		// Check for map change
-		if (checkMapChange && this.path.length === 0) {
+		if (checkMapChange && atDestination) {
 			var tile = world.dungeon.getTile(this.pos[0], this.pos[1]);
-			if (tile.entrance && this.path.length === 0) {
+			if (tile.entrance) {
 				world.changeMap(this, tile.entrance);
 			}
 		}

@@ -404,7 +404,7 @@ UI.prototype.update = function() {
 		} else*/ if (this.actor.visibility(mx, my) > 0.1) {
 			if (world.dungeon.getTile(mx, my, Dungeon.LAYER_ITEM))
 				cursor = "cell";
-			else if (world.dungeon.getPassable(mx, my))
+			else if (world.dungeon.getTargetable(mx, my))
 				cursor = "crosshair";
 		}
 		this.display.getContainer().style.cursor = cursor;

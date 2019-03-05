@@ -122,6 +122,17 @@ Dungeon.prototype.setTile = function(x, y, tile, layer) {
 Dungeon.prototype.getPassable = function(x, y) {
 	var staticTile = this.getTile(x, y, Dungeon.LAYER_STATIC);
 	if (staticTile && !staticTile.walkable) return false;
+	var actorTile = this.getTile(x, y, Dungeon.LAYER_ACTOR);
+	if (actorTile) return false;
+	return this.getTile(x, y, Dungeon.LAYER_BG).walkable;
+};
+
+Dungeon.prototype.getTargetable = function(x, y) {
+	var staticTile = this.getTile(x, y, Dungeon.LAYER_STATIC);
+	if (staticTile) {
+		if (staticTile.interactable) return true;
+		if (!staticTile.walkable) return false;
+	}
 	return this.getTile(x, y, Dungeon.LAYER_BG).walkable;
 };
 
@@ -132,11 +143,19 @@ Dungeon.prototype.getTransparent = function(x, y) {
 };
 
 Dungeon.prototype.findPath = function(x, y, actor) {
-	var finder = new ROT.Path.AStar(x, y, this.getPassable.bind(this));
+	var actorx = actor.pos[0];
+	var actory = actor.pos[1];
+	var finder = new ROT.Path.AStar(x, y, (function(testx, testy) {
+		if (testx === actorx && testy === actory)
+			return true;
+		if (testx === x && testy === y)
+			return this.getTargetable(testx, testy);
+		return this.getPassable(testx, testy);
+	}).bind(this));
 	var success = false;
 	actor.path = [];
-	finder.compute(actor.pos[0], actor.pos[1], function(x, y) {
-		if (x != actor.pos[0] || y != actor.pos[1])
+	finder.compute(actorx, actory, function(x, y) {
+		if (x != actorx || y != actory)
 			actor.path.push([x, y]);
 		success = true;
 	});
