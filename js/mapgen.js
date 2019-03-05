@@ -78,7 +78,12 @@ Dungeon.prototype.generateInn = function(params) {
 			placeTable(x, y);
 
 	// Barrels
-	this.setTile(1, Math.floor(this.height / 2), TILES.barrel, Dungeon.LAYER_STATIC);
+	var barrelY = Math.floor(this.height / 2) - 2;
+	for (var drink in DRINKS) {
+		this.setTile(0, barrelY, TILES[drink], Dungeon.LAYER_STATIC);
+		this.setTile(1, barrelY, TILES["barrel_" + drink], Dungeon.LAYER_STATIC);
+		barrelY++;
+	}
 
 	// Door
 	this.setTile(this.width - 1, Math.floor(this.height / 2), TILES.door_wood, Dungeon.LAYER_STATIC);

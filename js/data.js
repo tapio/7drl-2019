@@ -313,10 +313,25 @@ var TILES = {
 		desc: "Chair"
 	},
 
-	barrel: {
+	barrel_beer: {
 		name: "beer barrel", desc: "Here be beer",
 		tileCoords: [ 15, 2 ], walkable: true, transparent: true,
 		container: "beer"
+	},
+	barrel_wine: {
+		name: "wine barrel", desc: "Here be wine",
+		tileCoords: [ 15, 2 ], walkable: true, transparent: true,
+		container: "wine"
+	},
+	barrel_champagne: {
+		name: "champagne barrel", desc: "Here be champagne",
+		tileCoords: [ 15, 2 ], walkable: true, transparent: true,
+		container: "champagne"
+	},
+	barrel_booze: {
+		name: "booze barrel", desc: "Here be booze",
+		tileCoords: [ 15, 2 ], walkable: true, transparent: true,
+		container: "booze"
 	},
 
 	altar: {
@@ -357,12 +372,17 @@ var TILES = {
 	wine: {
 		name: "wine", desc: "A glass of wine",
 		tileCoords: [ 9, 15 ], walkable: true, transparent: true,
-		drink: false // TODO: Waiting for barrel
+		drink: true
 	},
 	champagne: {
 		name: "champagne", desc: "A bottle of champagne",
 		tileCoords: [ 10, 15 ], walkable: true, transparent: true,
-		drink: false // TODO: Waiting for barrel
+		drink: true
+	},
+	booze: {
+		name: "booze", desc: "A glass of booze",
+		tileCoords: [ 11, 15 ], walkable: true, transparent: true,
+		drink: true
 	},
 
 	ui_attention: {
@@ -597,7 +617,6 @@ var LEVELS = [
 		generator: "inn",
 		width: 20,
 		height: 15,
-		wallOnStaticLayer: true,
 		wall: [ TILES.wall_stone2 ],
 		floor: [ TILES.floor_marble_a, TILES.floor_marble_b, TILES.floor_marble_c, TILES.floor_marble_d ],
 		table: [ TILES.table ],
