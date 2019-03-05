@@ -17,7 +17,8 @@ function UI(player) {
 		messages: $("#messages"),
 		timeLeft: $("#time-left"),
 		gold: $("#gold"),
-		reputation: $("#reputation")
+		reputation: $("#reputation"),
+		invItems: $("#inv-items")
 	};
 	// Load settings
 	var savedSettings = window.localStorage.getItem("SETTINGS");
@@ -165,6 +166,10 @@ function UI(player) {
 		}
 		world.start();
 		$("#status").classList.remove("hidden");
+		if (ui.actor)
+			$("#inv").classList.remove("hidden");
+		else
+			$("#inv").classList.add("hidden");
 
 		// "Liberate" sounds in user gesture so that they work on mobile
 		for (var sound in SOUNDS) {
@@ -381,6 +386,15 @@ UI.prototype.update = function() {
 
 	if (!this.actor)
 		return;
+
+	var invCount = this.actor.items.length;
+	var invText = invCount ? "" : "Nothing";
+	for (var i = 0; i < invCount; i++) {
+		invText += this.actor.items[i].name;
+		if (i < invCount - 1)
+			invText += ", ";
+	}
+	this.dom.invItems.innerHTML = invText;
 
 	if (!CONFIG.touch) {
 		var cursor = "default";
