@@ -68,6 +68,14 @@ Game.prototype.update = function(dt) {
 	}
 };
 
+Game.prototype.addGold = function addGold(amount) {
+	this.gold += amount;
+};
+
+Game.prototype.addReputation = function addReputation(amount) {
+	this.reputation += amount;
+};
+
 Game.prototype.cmd = function(func, ...args) {
 	if (ui.client)
 		ui.client.addCmd("game", func.name, args)

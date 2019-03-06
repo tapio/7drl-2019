@@ -91,13 +91,6 @@ function Client(params) {
 					actor.ai.changeStateUnsynced(msg.state);
 				}
 				break;
-			case "game":
-				var change = msg.change;
-				for (var prop in change) {
-					if (game[prop] !== undefined && change[prop])
-						game[prop] += change[prop];
-				}
-				break;
 			case "cmds":
 				var cmds = msg.cmds;
 				for (var i = 0; i < cmds.length; i++) {
@@ -180,15 +173,6 @@ Client.prototype.sendAIState = function(actor) {
 		type: "ai",
 		id: actor.id,
 		state: actor.ai.state
-	});
-};
-
-Client.prototype.sendGameStateUpdate = function(change) {
-	if (!this.connected) return;
-
-	this.send({
-		type: "game",
-		change: change
 	});
 };
 

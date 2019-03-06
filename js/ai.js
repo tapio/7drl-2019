@@ -65,11 +65,8 @@ AI.prototype.handleSatisfaction = function(config) {
 			var satisfaction = config.satisfaction[i];
 			var gold = config.gold ? config.gold[i] : 0;
 			this.satisfaction += satisfaction;
-			game.reputation += satisfaction;
-			game.gold += gold;
-			if (ui.client) {
-				ui.client.sendGameStateUpdate({reputation: satisfaction, gold: gold});
-			}
+			game.cmd(game.addReputation, satisfaction);
+			game.cmd(game.addGold, gold);
 			return i;
 		}
 	}
@@ -110,7 +107,7 @@ AI.prototype.interactWithMe = function(other) {
 				// Reasking/wrong delivery is not cool
 				ui.msg(this.actor.name + ": Where is my " + this.order.name + "!", other);
 				this.satisfaction--;
-				game.reputation--;
+				game.cmd(game.addReputation, -1);
 				this.actor.say([ TILES[this.order.id], TILES.ui_question ]);
 			}
 			break;
