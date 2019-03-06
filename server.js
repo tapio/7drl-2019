@@ -7,14 +7,13 @@ var fs = require('fs');
 var games = {};
 var nextPlayerId = 1;
 
-function createGame(id, data) {
+function createGame(id, host, data) {
 	games[id] = {
 		id: id,
+		host: host,
 		data: data,
 		players: {},
-		spectators: {},
 		numPlayers: 0,
-		numSpectators: 0,
 	};
 }
 
@@ -22,75 +21,35 @@ function Player(socket, id, game) {
 	this.socket = socket;
 	this.id = id;
 	this.game = game;
-	this.pos = null;
 }
-
-Player.prototype.serialize = function() {
-	return { id: this.id, pos: this.pos };
-};
 
 Player.prototype.join = function(game) {
 	if (!this.id) return; // Id is required
 	this.leave(); // Leave if already in game
 	// Create game if not present
 	if (!games[game])
-		createGame(game, null);
+		createGame(game, this, null);
 	this.game = games[game]; // Cache reference
 	this.game.players[this.id] = this; // Join
 	this.game.numPlayers++;
-	this.pos = [ 2, 3 ]; // FIXME
 };
-
-Player.prototype.spectate = function(game) {
-	if (!this.id) return; // Id is required
-	this.leave(); // Leave if already in game
-	// Create game if not present
-	if (!games[game])
-		createGame(game, null);
-	this.game = games[game]; // Cache reference
-	this.game.spectators[this.id] = this; // Join
-	this.game.numSpectators++;
-	this.pos = null;
-};
-
-Player.prototype.isSpectator = function() { return !this.pos; }
 
 Player.prototype.leave = function() {
 	if (!this.game) return; // Nothing to do if not in game
-	if (this.isSpectator()) {
-		delete this.game.spectators[this.id]; // Leave the game
-		this.game.numSpectators--;
-	} else {
-		delete this.game.players[this.id]; // Leave the game
-		this.game.numPlayers--;
-	}
+	delete this.game.players[this.id]; // Leave the game
+	this.game.numPlayers--;
 	//if (this.game.numPlayers == 0)
 	//	delete games[this.game.id];
 	delete this.game; // Remove cached game reference
 };
 
-Player.prototype.getGameState = function() {
-	if (!this.game) return [];
-	var ret = [];
-	var players = this.game.players;
-	for (var i in players) {
-		if (/*i !== this.id &&*/ players[i])
-			ret.push(players[i].serialize());
-	}
-	return { type: "state", data: ret };
-};
-
 Player.prototype.broadcast = function(data, metoo) {
 	if (!this.game) return;
+	var serialized = JSON.stringify(data);
 	var players = this.game.players;
 	for (var i in players) {
 		if ((i !== this.id || metoo) && players[i])
-			players[i].socket.send(JSON.stringify(data));
-	}
-	var spectators = this.game.spectators;
-	for (var i in spectators) {
-		if ((i !== this.id || metoo) && spectators[i])
-			spectators[i].socket.send(JSON.stringify(data));
+			players[i].socket.send(serialized);
 	}
 };
 
@@ -106,29 +65,31 @@ server.on('connection', function(ws) {
 		switch (msg.type) {
 			// Create game
 			case "create":
-				createGame(msg.game, msg.data);
-				pl.spectate(msg.game); // Can later join properly
+				createGame(msg.game, pl, msg.data);
 				if (VERBOSITY > 0) console.log(pl.id + " creates game " + msg.game);
+				pl.join(msg.game);
 				break;
 			// Join game
 			case "join":
 				pl.join(msg.game);
-				if (VERBOSITY > 0) console.log(pl.id + " joins game " + msg.game + " (" + pl.game.numPlayers + " players, " + pl.game.numSpectators + " spectators)");
-				pl.broadcast({ type: "state", data: [ pl.serialize() ] }); // Inform others
-				ws.send(JSON.stringify({ type: "join", player: pl.serialize(), data: pl.game.data })); // Inform newcomer about the id
-				ws.send(JSON.stringify(pl.getGameState())); // Inform newcomer about others
-				break;
-			// Move
-			case "move":
-				pl.pos = msg.pos;
-				pl.broadcast({ type: "state", data: [ pl.serialize() ] }, true);
+				if (VERBOSITY > 0) console.log(pl.id + " joins game " + msg.game + " (" + pl.game.numPlayers + " players)");
+				ws.send(JSON.stringify({ type: "joined", id: pl.id, data: pl.game.data })); // Inform newcomer about the id
+				pl.broadcast({ type: "join", id: pl.id }); // Inform others
 				break;
 			case "ping":
 				ws.send('{"type":"pong"}');
 				break;
 			// Unknown, just pass it along
 			default:
-				pl.broadcast(msg, false);
+				// Direct message?
+				if (msg.to && pl.game) {
+					var toPl = pl.game.players[msg.to];
+					delete msg.to;
+					if (toPl)
+						toPl.socket.send(JSON.stringify(msg));
+				} else {
+					pl.broadcast(msg, false);
+				}
 				break;
 		}
 	});

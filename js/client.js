@@ -36,42 +36,42 @@ function Client(params) {
 		var dungeon = world.dungeon;
 		var msg = JSON.parse(event.data);
 		switch (msg.type) {
-			case "join":
-				this.actor.id = msg.player.id;
-				this.actor.fov = [];
+			case "joined":
+				this.actor.id = msg.id;
 				dungeon.deserialize(msg.data);
-				this.actor.updateVisibility();
-				this.playing = true;
-				break;
-			case "state":
-				for (var i = 0; i < msg.data.length; ++i) {
-					var state = msg.data[i];
-					var peer = dungeon.findById(state.id);
-					if (!peer) { // New player?
-						ui.msg("Player " + state.id + " joined.");
-						peer = new Actor(state.pos[0], state.pos[1], {
-							id: state.id
-						});
-						world.addActor(peer);
-						//FIXME: Horrible hack, fixme
-						if (CONFIG.host && peer.id[0] == "P") {
-							var mobs = [];
-							for (var i = 0; i< dungeon.actors.length; ++i) {
-								var mob = dungeon.actors[i];
-								if (mob.ai) {
-									mobs.push({ id: mob.id, pos: mob.pos });
-								}
-							}
-							this.send({
-								type: "state",
-								data: mobs
-							});
-						}
-					} else {
-						dungeon.findPath(state.pos[0], state.pos[1], peer);
-					}
+				if (this.actor) {
+					this.actor.fov = [];
+					this.actor.updateVisibility();
 				}
-				dungeon.needsRender = true;
+				this.send({
+					type: "newplayer",
+					id: this.actor.id,
+					pos: this.actor.pos,
+					params: this.actor.getCreateParams()
+				});
+				break;
+			case "join":
+				ui.msg("Player " + msg.id + " joined.");
+				if (this.actor) {
+					this.send({
+						type: "newplayer",
+						to: msg.id,
+						id: this.actor.id,
+						pos: this.actor.pos,
+						params: this.actor.getCreateParams()
+					});
+				}
+				break;
+			case "newplayer":
+				var peer = dungeon.findById(msg.id);
+				if (!peer) { // New player?
+					ui.msg("Player " + msg.id + " created.");
+					peer = new Actor(msg.pos[0], msg.pos[1], msg.params);
+					peer.id = msg.id;
+					world.addActor(peer);
+				} else {
+					console.log("Player " + peer.id + " already exists");
+				}
 				break;
 			case "cmds":
 				var cmds = msg.cmds;
@@ -101,19 +101,6 @@ function Client(params) {
 		if (this.actor) this.actor.id = null;
 	}).bind(this);
 }
-
-Client.prototype.sendPosition = function(actor) {
-	if (!this.connected) return;
-
-	if (!actor.path.length)
-		return;
-
-	this.send({
-		type: "move",
-		id: actor.id,
-		pos: last(actor.path)
-	});
-};
 
 Client.prototype.addCmd = function(cmdType, ...params) {
 	this.commands.push({

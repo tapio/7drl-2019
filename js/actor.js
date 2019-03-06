@@ -32,6 +32,14 @@ function Actor(x, y, def) {
 
 Actor.nextGeneratedId = 1;
 
+Actor.prototype.getCreateParams = function() {
+	return {
+		id: this.id,
+		name: this.name,
+		ch: this.tile.ch
+	};
+}
+
 // Getter needed for ROT.Scheduler.Speed
 Actor.prototype.getSpeed = function() {
 	return this.speed;
@@ -69,7 +77,7 @@ Actor.prototype.moveTo = function(x, y) {
 	if (!world.dungeon.getTargetable(x, y)) return false;
 	if (world.dungeon.findPath(x, y, this)) {
 		if (ui.client && (this == ui.actor || (CONFIG.host && !!this.ai)))
-			ui.client.sendPosition(this);
+			ui.client.addCmd("actor", this.id, "moveTo", [x, y]);
 		return true;
 	}
 	return false;
@@ -220,6 +228,6 @@ Actor.prototype.act = function() {
 
 Actor.prototype.cmd = function(func, ...args) {
 	if (ui.client)
-		ui.client.addCmd("actor", this.id, func.name, args)
+		ui.client.addCmd("actor", this.id, func.name, args);
 	func.apply(this, args);
 };

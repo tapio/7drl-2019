@@ -92,7 +92,7 @@ Dungeon.prototype.generateInn = function(params) {
 	this.mobSpawns.push([doorx, doory]);
 
 	shuffle(freeTiles);
-	this.start = freeTiles.pop();
+	this.start = [2, 5]; //freeTiles.pop(); // TODO
 	this.end = freeTiles.pop();
 	return freeTiles;
 };

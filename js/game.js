@@ -60,12 +60,17 @@ Game.prototype.update = function(dt) {
 	if (this.timeSinceSpawn > GAMECONFIG.spawnInterval && dungeon.actors.length < dungeon.chairs.length) {
 		var pos = randElem(dungeon.mobSpawns);
 		if (!dungeon.getTile(pos[0], pos[1], Dungeon.LAYER_ACTOR)) {
-			var mob = new Actor(pos[0], pos[1], randElem(dungeon.params.mobs));
-			world.addActor(mob);
-			this.timeSinceSpawn = 0;
-			// TODO: Network sync
+			var mobDef = randElem(dungeon.params.mobs);
+			mobDef.id = "M" + (Actor.nextGeneratedId++);
+			this.cmd(this.spawnMob, pos, mobDef);
 		}
 	}
+};
+
+Game.prototype.spawnMob = function spawnMob(pos, def) {
+	var mob = new Actor(pos[0], pos[1], def);
+	world.addActor(mob);
+	this.timeSinceSpawn = 0;
 };
 
 Game.prototype.addGold = function addGold(amount) {
