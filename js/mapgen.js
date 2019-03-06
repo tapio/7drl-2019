@@ -78,10 +78,19 @@ Dungeon.prototype.generateInn = function(params) {
 			placeTable(x, y);
 
 	// Barrels
-	var barrelY = Math.floor(this.height / 2) - 2;
-	for (var drink in DRINKS) {
-		this.setTile(0, barrelY, TILES[drink], Dungeon.LAYER_STATIC);
-		this.setTile(1, barrelY, TILES["barrel_" + drink], Dungeon.LAYER_STATIC);
+	var barrelTileCount = params.drinks.length + params.food.length + 1;
+	var barrelY = Math.floor(this.height / 2 - barrelTileCount / 2);
+	for (var i = 0; i < params.drinks.length; ++i) {
+		var drink = params.drinks[i];
+		this.setTile(0, barrelY, drink, Dungeon.LAYER_STATIC);
+		this.setTile(1, barrelY, TILES["barrel_" + drink.id], Dungeon.LAYER_STATIC);
+		barrelY++;
+	}
+	barrelY++;
+	for (var i = 0; i < params.food.length; ++i) {
+		var food = params.food[i];
+		this.setTile(0, barrelY, food, Dungeon.LAYER_STATIC);
+		this.setTile(1, barrelY, TILES["barrel_" + food.id], Dungeon.LAYER_STATIC);
 		barrelY++;
 	}
 

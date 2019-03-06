@@ -333,6 +333,27 @@ var TILES = {
 		container: "booze"
 	},
 
+	barrel_meat: {
+		name: "meat barrel", desc: "Here be meat",
+		tileCoords: [ 15, 2 ], walkable: false, transparent: true, interactable: true,
+		container: "meat"
+	},
+	barrel_chicken: {
+		name: "chicken barrel", desc: "Here be chicken",
+		tileCoords: [ 15, 2 ], walkable: false, transparent: true, interactable: true,
+		container: "chicken"
+	},
+	barrel_stew: {
+		name: "stew barrel", desc: "Here be stew",
+		tileCoords: [ 15, 2 ], walkable: false, transparent: true, interactable: true,
+		container: "stew"
+	},
+	barrel_fish: {
+		name: "fish barrel", desc: "Here be fish",
+		tileCoords: [ 15, 2 ], walkable: false, transparent: true, interactable: true,
+		container: "fish"
+	},
+
 	altar: {
 		tileCoords: [ 8, 7 ], walkable: true, transparent: true,
 		desc: "Gods offer favors for sacrifices on this altar",
@@ -382,6 +403,26 @@ var TILES = {
 		name: "booze", desc: "A glass of booze",
 		tileCoords: [ 11, 15 ], walkable: true, transparent: true,
 		drink: true
+	},
+	meat: {
+		name: "meat", desc: "Meat",
+		tileCoords: [ 0, 15 ], walkable: true, transparent: true,
+		food: true
+	},
+	chicken: {
+		name: "chicken", desc: "Chicken",
+		tileCoords: [ 1, 15 ], walkable: true, transparent: true,
+		food: true
+	},
+	stew: {
+		name: "stew", desc: "Stew",
+		tileCoords: [ 2, 15 ], walkable: true, transparent: true,
+		food: true
+	},
+	fish: {
+		name: "fish", desc: "Fish",
+		tileCoords: [ 3, 15 ], walkable: true, transparent: true,
+		food: true
 	},
 
 	ui_attention: {
@@ -609,7 +650,9 @@ var LEVELS = [
 		mobs: [ MOBS.goblin ],
 		mobAmount: 0,
 		items: [ ],
-		itemAmount: 0
+		itemAmount: 0,
+		drinks: [ TILES.beer, TILES.booze ],
+		food: [ TILES.stew ]
 	},{
 		name: "Inn",
 		desc: "The Pranching Pony",
@@ -626,7 +669,9 @@ var LEVELS = [
 		mobs: [ MOBS.goblin ],
 		mobAmount: 0,
 		items: [ ],
-		itemAmount: 0
+		itemAmount: 0,
+		drinks: [ TILES.beer, TILES.wine, TILES.champagne, TILES.booze ],
+		food: [ TILES.chicken, TILES.fish ]
 	}
 ];
 
