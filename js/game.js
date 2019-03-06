@@ -10,6 +10,30 @@ function Game() {
 	this.timeLeft = 0;
 	this.timeSinceSpawn = 0;
 	this.reset();
+
+	this.cmdProcessors = {
+		actor: function(actorId, funcName, params) {
+			var actor = world.dungeon.findById(actorId);
+			if (actor) {
+				var func = actor[funcName];
+				if (func) func.apply(actor, params);
+				else console.log("No actor." + funcName);
+			} else console.log("No actor " + actorId);
+		},
+		ai: function(actorId, funcName, params) {
+			var actor = world.dungeon.findById(actorId);
+			if (actor && actor.ai) {
+				var func = actor.ai[funcName];
+				if (func) func.apply(actor.ai, params);
+				else console.log("No ai." + funcName);
+			} else console.log("No ai actor " + actorId);
+		},
+		game: function(funcName, params) {
+			var func = game[funcName];
+			if (func) func.apply(game, params);
+			else console.log("No game." + funcName);
+		}
+	};
 }
 
 Game.prototype.reset = function() {
@@ -42,4 +66,10 @@ Game.prototype.update = function(dt) {
 			// TODO: Network sync
 		}
 	}
+};
+
+Game.prototype.cmd = function(func, ...args) {
+	if (ui.client)
+		ui.client.addCmd("game", func.name, args)
+	func.apply(this, args);
 };

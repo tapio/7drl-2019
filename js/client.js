@@ -7,6 +7,7 @@ function Client(params) {
 	this.socket = new WebSocket(server);
 	this.ping = Infinity;
 	this.game = params.game || "testgame";
+	this.commands = [];
 	var pingTime = 0;
 	var pingInterval = null;
 
@@ -97,6 +98,16 @@ function Client(params) {
 						game[prop] += change[prop];
 				}
 				break;
+			case "cmds":
+				var cmds = msg.cmds;
+				for (var i = 0; i < cmds.length; i++) {
+					var cmdData = cmds[i];
+					var cmdProcessor = game.cmdProcessors[cmdData.type];
+					if (cmdProcessor) {
+						cmdProcessor.apply(null, cmdData.params);
+					} else console.log("No command processor for " , cmdData.type);
+				}
+				break;
 			case "open":
 				var door = dungeon.getTile(msg.pos[0], msg.pos[1], Dungeon.LAYER_STATIC);
 				console.assert(door, "No door to open!");
@@ -181,3 +192,19 @@ Client.prototype.sendGameStateUpdate = function(change) {
 	});
 };
 
+Client.prototype.addCmd = function(cmdType, ...params) {
+	this.commands.push({
+		type: cmdType,
+		params: params
+	});
+};
+
+Client.prototype.sendPendingCommands = function() {
+	if (this.commands.length > 0) {
+		this.send({
+			type: "cmds",
+			cmds: this.commands
+		});
+		this.commands.length = 0;
+	}
+};

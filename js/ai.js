@@ -182,3 +182,9 @@ AI.prototype.drunkAI = function() {
 	}
 	return true;
 };
+
+AI.prototype.cmd = function(func, ...args) {
+	if (ui.client)
+		ui.client.addCmd("ai", this.actor.id, func.name, args)
+	func.apply(this, args);
+};

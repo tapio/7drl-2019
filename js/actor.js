@@ -219,3 +219,9 @@ Actor.prototype.act = function() {
 	}
 	return true; // Can't wait in MP
 };
+
+Actor.prototype.cmd = function(func, ...args) {
+	if (ui.client)
+		ui.client.addCmd("actor", this.id, func.name, args)
+	func.apply(this, args);
+};

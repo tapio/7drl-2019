@@ -47,6 +47,8 @@ World.prototype.update = function(dt) {
 	}
 	// Reap the dead
 	this.dungeon.actors = actors.filter(function(elem) { return elem.health > 0; });
+	if (ui.client)
+		ui.client.sendPendingCommands();
 	// Check player death
 	if (ui.actor && ui.actor.health <= 0) {
 		this.running = false;
