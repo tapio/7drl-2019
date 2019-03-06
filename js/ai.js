@@ -40,6 +40,7 @@ function AI(actor) {
 	this.target = null;
 	this.state = PatronState.Moving;
 	this.stateTime = 0;
+	this.attentionTime = 0;
 	this.order = null;
 	this.satisfaction = 0;
 	this.thirst = 0;
@@ -56,6 +57,7 @@ AI.prototype.changeState = function(newState) {
 AI.prototype.changeStateUnsynced = function(newState) {
 	this.state = newState;
 	this.stateTime = 0;
+	this.attentionTime = 0;
 };
 
 AI.prototype.handleSatisfaction = function(config) {
@@ -134,7 +136,9 @@ AI.prototype.interactWithMe = function(other) {
 };
 
 AI.prototype.act = function() {
-	this.stateTime += CONFIG.roundDelay / 1000;
+	var dt = CONFIG.roundDelay / 1000;
+	this.stateTime += dt;
+	this.attentionTime += dt;
 
 	if (!CONFIG.host) {
 		if (this.actor.doPath(false, false)) {
@@ -166,11 +170,17 @@ AI.prototype.act = function() {
 			break;
 		}
 		case PatronState.WantToOrder: {
-			// TODO: Show emote if it takes long
+			if (this.attentionTime > AICONFIG.WantToOrder.timing[TimingLevel.Satisfactory]) {
+				this.actor.say([ TILES.ui_attention ]);
+				this.attentionTime = 0;
+			}
 			break;
 		}
 		case PatronState.WaitingDelivery: {
-			// TODO: Show emote if it takes long
+			if (this.attentionTime > AICONFIG.WaitingDelivery.timing[TimingLevel.Satisfactory]) {
+				this.actor.say([ TILES.ui_question ]);
+				this.attentionTime = 0;
+			}
 			break;
 		}
 		case PatronState.Content: {
