@@ -81,6 +81,14 @@ AI.prototype.addDrunkenness = function addDrunkenness(amount) {
 	this.drunkenness += amount;
 };
 
+AI.prototype.addThirst = function addThirst(amount) {
+	this.thirst += amount;
+};
+
+AI.prototype.addHunger = function addHunger(amount) {
+	this.hunger += amount;
+};
+
 AI.prototype.setOrder = function setOrder(id) {
 	if (DRINKS[id])
 		this.order = DRINKS[id];
@@ -95,7 +103,9 @@ AI.prototype.interactWithMe = function(other) {
 			break;
 		}
 		case PatronState.WantToOrder: {
-			this.cmd(this.setOrder, randProp(DRINKS).id);
+			var dungeonParams = world.dungeon.params;
+			var orderId = this.thirst >= this.hunger ? randElem(dungeonParams.drinks).id : randElem(dungeonParams.food).id;
+			this.cmd(this.setOrder, orderId);
 			ui.msg(this.actor.name + ": I'd like " + this.order.name, other);
 			this.actor.say([ TILES[this.order.id] ]);
 			this.handleSatisfaction(AICONFIG.WantToOrder);
@@ -116,6 +126,13 @@ AI.prototype.interactWithMe = function(other) {
 				var satisfactionLevel = this.handleSatisfaction(AICONFIG.WaitingDelivery);
 				this.actor.say(AICONFIG.emotes[satisfactionLevel]);
 				this.cmd(this.addDrunkenness, 1);
+				if (item.drink) {
+					this.cmd(this.addHunger, 0.5);
+					this.cmd(this.addThirst, -1);
+				} else if (item.food) {
+					this.cmd(this.addHunger, -1);
+					this.cmd(this.addThirst, 1);
+				}
 				ui.snd("powerup", this.actor);
 				this.order = null;
 				this.changeState(PatronState.Content);
