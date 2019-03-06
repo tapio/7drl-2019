@@ -38,8 +38,6 @@ function Client(params) {
 		switch (msg.type) {
 			case "join":
 				this.actor.id = msg.player.id;
-				//this.actor.pos[0] = msg.player.pos[0];
-				//this.actor.pos[1] = msg.player.pos[1];
 				this.actor.fov = [];
 				dungeon.deserialize(msg.data);
 				this.actor.updateVisibility();
@@ -83,22 +81,6 @@ function Client(params) {
 					if (cmdProcessor) {
 						cmdProcessor.apply(null, cmdData.params);
 					} else console.log("No command processor for " , cmdData.type);
-				}
-				break;
-			case "open":
-				var door = dungeon.getTile(msg.pos[0], msg.pos[1], Dungeon.LAYER_STATIC);
-				console.assert(door, "No door to open!");
-				if (door) {
-					dungeon.setTile(msg.pos[0], msg.pos[1], door.name + "_open", Dungeon.LAYER_STATIC);
-					this.actor.updateVisibility();
-				}
-				break;
-			case "item_picked":
-				var item = dungeon.getTile(msg.pos[0], msg.pos[1], Dungeon.LAYER_ITEM);
-				console.assert(item, "Item already picked up!");
-				if (item) {
-					dungeon.removeItem(item);
-					// TODO: Add to some player's inventory?
 				}
 				break;
 			case "leave":
