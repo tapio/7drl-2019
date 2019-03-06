@@ -75,12 +75,6 @@ function Client(params) {
 				}
 				dungeon.needsRender = true;
 				break;
-			case "ai":
-				var actor = dungeon.findById(msg.id);
-				if (actor && actor.ai) {
-					actor.ai.changeStateUnsynced(msg.state);
-				}
-				break;
 			case "cmds":
 				var cmds = msg.cmds;
 				for (var i = 0; i < cmds.length; i++) {
@@ -136,16 +130,6 @@ Client.prototype.sendPosition = function(actor) {
 		type: "move",
 		id: actor.id,
 		pos: last(actor.path)
-	});
-};
-
-Client.prototype.sendAIState = function(actor) {
-	if (!this.connected) return;
-
-	this.send({
-		type: "ai",
-		id: actor.id,
-		state: actor.ai.state
 	});
 };
 

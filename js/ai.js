@@ -48,10 +48,9 @@ function AI(actor) {
 }
 
 AI.prototype.changeState = function(newState) {
-	this.changeStateUnsynced(newState);
-	if (CONFIG.host && ui.client) {
-		ui.client.sendAIState(this.actor);
-	}
+	if (CONFIG.host) {
+		this.cmd(this.changeStateUnsynced, newState);
+	} else this.changeStateUnsynced(newState);
 };
 
 AI.prototype.changeStateUnsynced = function(newState) {
