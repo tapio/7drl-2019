@@ -101,7 +101,7 @@ function UI(player) {
 		validateNewGame();
 	}, false);
 	$("#new-name").addEventListener("input", function() {
-		ui.playerName = this.value;
+		ui.playerName = this.value.toLowerCase();
 		validateNewGame();
 	}, false);
 	$("#main-fullscreen").addEventListener("click", toggleFullscreen, false);
