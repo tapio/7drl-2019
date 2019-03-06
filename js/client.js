@@ -75,16 +75,6 @@ function Client(params) {
 				}
 				dungeon.needsRender = true;
 				break;
-			case "say":
-				var actor = dungeon.findById(msg.id);
-				if (actor) {
-					var sayMsg = [];
-					for (var i = 0; i < msg.say.length; i++) {
-						sayMsg.push(TILES[msg.say[i]]);
-					}
-					actor.sayUnsynced(sayMsg);
-				}
-				break;
 			case "ai":
 				var actor = dungeon.findById(msg.id);
 				if (actor && actor.ai) {
@@ -146,23 +136,6 @@ Client.prototype.sendPosition = function(actor) {
 		type: "move",
 		id: actor.id,
 		pos: last(actor.path)
-	});
-};
-
-Client.prototype.sendSay = function(actor) {
-	if (!this.connected) return;
-
-	if (!actor.sayMsg)
-		return;
-
-	var sayArr = [];
-	for (var i = 0; i < actor.sayMsg.length; i++) {
-		sayArr.push(actor.sayMsg[i].id);
-	}
-	this.send({
-		type: "say",
-		id: actor.id,
-		say: sayArr
 	});
 };
 

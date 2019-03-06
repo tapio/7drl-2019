@@ -183,13 +183,11 @@ Actor.prototype.interact = function(target) {
 };
 
 Actor.prototype.say = function(msg) {
-	this.sayUnsynced(msg);
-	if (ui.client)
-		ui.client.sendSay(this);
+	this.cmd(this.sayDeserialize, msg.map(x => x.id));
 };
 
-Actor.prototype.sayUnsynced = function(msg) {
-	this.sayMsg = msg;
+Actor.prototype.sayDeserialize = function sayDeserialize(msg) {
+	this.sayMsg = msg.map(x => TILES[x]);
 	this.sayTimeout = CONFIG.sayDuration;
 	world.dungeon.needsRender = true;
 };
