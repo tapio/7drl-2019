@@ -19,7 +19,6 @@ function World() {
 World.prototype.addActor = function(actor) {
 	this.dungeon.actors.push(actor);
 	this.dungeon.update();
-	this.running = true;
 };
 
 World.prototype.start = function() {

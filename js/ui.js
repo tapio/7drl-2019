@@ -164,12 +164,21 @@ function UI(player) {
 			};
 			ui.client = new Client(clientParams);
 		}
-		world.start();
-		$("#status").classList.remove("hidden");
-		if (ui.actor)
-			$("#inv").classList.remove("hidden");
-		else
-			$("#inv").classList.add("hidden");
+		var neededPlayers = ui.hostingChoice === "solo" ? 1 : 2;
+		(function checkStart() {
+			if (world.dungeon.actors.length < neededPlayers) {
+				$("#wait").style.display = "block";
+				window.setTimeout(checkStart, 100);
+				return;
+			}
+			$("#wait").style.display = "none";
+			$("#status").classList.remove("hidden");
+			if (ui.actor)
+				$("#inv").classList.remove("hidden");
+			else
+				$("#inv").classList.add("hidden");
+			world.start();
+		})();
 
 		// "Liberate" sounds in user gesture so that they work on mobile
 		for (var sound in SOUNDS) {
