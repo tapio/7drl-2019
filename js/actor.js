@@ -144,13 +144,13 @@ Actor.prototype.doPath = function(checkItems, checkMapChange) {
 };
 
 Actor.prototype.tryPickUp = function(item) {
+	// Note: Items are currently unsynced as they are not on ground / cannot be dropped / swapped
 	if (this.items.length >= this.maxItems) {
 		ui.msg("Can't carry more items, dropping " + this.items[0].name + ".", this);
 		this.items[0] = item;
 	} else {
 		this.items.push(item);
 	}
-	// TODO: Handle multiplayer
 	this.say([ TILES.ui_plus, TILES[item.id] ]);
 	ui.msg("Picked up a " + item.name + ".", this);
 	ui.snd("pickup", this);

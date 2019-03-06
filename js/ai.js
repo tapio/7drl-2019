@@ -63,12 +63,27 @@ AI.prototype.handleSatisfaction = function(config) {
 		if (this.stateTime < config.timing[i]) {
 			var satisfaction = config.satisfaction[i];
 			var gold = config.gold ? config.gold[i] : 0;
-			this.satisfaction += satisfaction;
+			this.cmd(this.addSatisfaction, satisfaction);
 			game.cmd(game.addReputation, satisfaction);
 			game.cmd(game.addGold, gold);
 			return i;
 		}
 	}
+};
+
+AI.prototype.addSatisfaction = function addSatisfaction(amount) {
+	this.satisfaction += amount;
+};
+
+AI.prototype.addDrunkenness = function addDrunkenness(amount) {
+	this.drunkenness += amount;
+};
+
+AI.prototype.setOrder = function setOrder(id) {
+	if (DRINKS[id])
+		this.order = DRINKS[id];
+	else if (FOOD[id])
+		this.order = FOOD[id];
 };
 
 AI.prototype.interactWithMe = function(other) {
@@ -78,7 +93,7 @@ AI.prototype.interactWithMe = function(other) {
 			break;
 		}
 		case PatronState.WantToOrder: {
-			this.order = randProp(DRINKS);
+			this.cmd(this.setOrder, randProp(DRINKS).id);
 			ui.msg(this.actor.name + ": I'd like " + this.order.name, other);
 			this.actor.say([ TILES[this.order.id] ]);
 			this.handleSatisfaction(AICONFIG.WantToOrder);
@@ -87,7 +102,7 @@ AI.prototype.interactWithMe = function(other) {
 		}
 		case PatronState.WaitingDelivery: {
 			if (!this.order) {
-				console.log("TODO: No order sycing yet!");
+				console.log("Oh no, no order!");
 				break;
 			}
 			var orderId = this.order.id;
@@ -98,14 +113,14 @@ AI.prototype.interactWithMe = function(other) {
 				ui.msg(this.actor.name + ": Thanks!", other);
 				var satisfactionLevel = this.handleSatisfaction(AICONFIG.WaitingDelivery);
 				this.actor.say(AICONFIG.emotes[satisfactionLevel]);
-				this.drunkenness++;
+				this.cmd(this.addDrunkenness, 1);
 				ui.snd("powerup", this.actor);
 				this.order = null;
 				this.changeState(PatronState.Content);
 			} else {
 				// Reasking/wrong delivery is not cool
 				ui.msg(this.actor.name + ": Where is my " + this.order.name + "!", other);
-				this.satisfaction--;
+				this.cmd(this.addSatisfaction, -1);
 				game.cmd(game.addReputation, -1);
 				this.actor.say([ TILES[this.order.id], TILES.ui_question ]);
 			}
