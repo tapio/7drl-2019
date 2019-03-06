@@ -47,6 +47,8 @@ function UI(player) {
 		$(".btn", function(elem) {
 			elem.classList.add("btn-no-touch");
 		});
+	} else {
+		$("#new-host-only").classList.add("hidden");
 	}
 
 	function toggleFullscreen() {
