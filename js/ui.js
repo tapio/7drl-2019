@@ -164,6 +164,7 @@ function UI(player) {
 			};
 			ui.client = new Client(clientParams);
 		}
+		$("#wait-gameid").innerHTML = ui.gameName;
 		var neededPlayers = ui.hostingChoice === "solo" ? 1 : 2;
 		(function checkStart() {
 			if (world.dungeon.actors.length < neededPlayers) {
@@ -362,6 +363,17 @@ UI.prototype.vibrate = function(pattern, source) {
 };
 
 UI.prototype.update = function() {
+	if (!world.running) {
+		var actors = world.dungeon.actors;
+		var text = actors.length ? "" : "No one yet";
+		for (var i = 0; i < actors.length; i++) {
+			text += actors[i].name;
+			if (i < actors.length - 1)
+				text += ", ";
+		}
+		$("#wait-players").innerHTML = text;
+	}
+
 	if (this.messagesDirty) {
 		var msgBuf = "";
 		var firstMsg = Math.max(this.messages.length-5, 0);
@@ -379,19 +391,22 @@ UI.prototype.update = function() {
 		this.messagesDirty = false;
 	}
 
-	this.dom.fps.innerHTML = Math.round(this.fps);
+	if (CONFIG.debug)
+		this.dom.fps.innerHTML = Math.round(this.fps);
 
-	var minutes = Math.floor(game.timeLeft / 60);
-	var seconds = Math.floor(game.timeLeft - minutes * 60);
-	if (game.timeLeft <= 0)
-		this.dom.timeLeft.innerHTML = "0";
-	else if (minutes > 0)
-		this.dom.timeLeft.innerHTML = minutes + ":" + (seconds < 10 ? "0" : "") + seconds;
-	else
-		this.dom.timeLeft.innerHTML = seconds;
+	if (world.running) {
+		var minutes = Math.floor(game.timeLeft / 60);
+		var seconds = Math.floor(game.timeLeft - minutes * 60);
+		if (game.timeLeft <= 0)
+			this.dom.timeLeft.innerHTML = "0";
+		else if (minutes > 0)
+			this.dom.timeLeft.innerHTML = minutes + ":" + (seconds < 10 ? "0" : "") + seconds;
+		else
+			this.dom.timeLeft.innerHTML = seconds;
 
-	this.dom.gold.innerHTML = Math.round(game.gold);
-	this.dom.reputation.innerHTML = Math.round(game.reputation);
+		this.dom.gold.innerHTML = Math.round(game.gold);
+		this.dom.reputation.innerHTML = Math.round(game.reputation);
+	}
 
 	if (!this.actor)
 		return;
