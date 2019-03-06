@@ -16,7 +16,7 @@ var TimingLevel = {
 };
 
 var AICONFIG = {
-	ContentTime: 5,
+	ContentTime: 12,
 	WantToOrder: {
 		timing: [ 1, 8, 12, 18, 999999 ],
 		satisfaction: [ 1, 0, -1, -2, -3 ]
