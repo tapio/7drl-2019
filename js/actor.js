@@ -204,6 +204,21 @@ Actor.prototype.kill = function kill() {
 	this.health = 0;
 };
 
+Actor.prototype.vomit = function vomit() {
+	var dirs = [ [0,1], [0,-1], [-1,0], [1,0] ];
+	var pos;
+	for (var i = 0; i < dirs.length; ++i) {
+		pos = [ this.pos[0] + dirs[i][0], this.pos[1] + dirs[i][1] ];
+		if (world.dungeon.getPassable(pos[0], pos[1]))
+			break;
+	}
+	if (i >= dirs.length)
+		return;
+	var item = clone(TILES.vomit);
+	item.pos = pos;
+	world.dungeon.setTile(item.pos[0], item.pos[1], item, Dungeon.LAYER_ITEM);
+};
+
 Actor.prototype.act = function() {
 	if (this.health <= 0)
 		return true;

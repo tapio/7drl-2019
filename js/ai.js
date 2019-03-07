@@ -20,7 +20,9 @@ var TimingLevel = {
 var AICONFIG = {
 	ContentTime: 12,
 	SatisfactionLeaveThreshold: -2,
-	VomitThreshold: 3,
+	DrunkennessVomitThreshold: 3,
+	VomitInterval: 5,
+	VomitReputation: -5,
 	WantToOrder: {
 		timing: [ 1, 8, 12, 18, 999999 ],
 		satisfaction: [ 1, 0, -1, -2, -3 ]
@@ -44,7 +46,7 @@ function AI(actor) {
 	this.target = null;
 	this.state = PatronState.Moving;
 	this.stateTime = 0;
-	this.attentionTime = 0;
+	this.intervalTimer = 0;
 	this.order = null;
 	this.satisfaction = 0;
 	this.thirst = 0;
@@ -61,7 +63,7 @@ AI.prototype.changeState = function(newState) {
 AI.prototype.changeStateUnsynced = function(newState) {
 	this.state = newState;
 	this.stateTime = 0;
-	this.attentionTime = 0;
+	this.intervalTimer = 0;
 	this.target = null;
 };
 
@@ -167,7 +169,7 @@ AI.prototype.interactWithMe = function(other) {
 AI.prototype.act = function() {
 	var dt = CONFIG.roundDelay / 1000;
 	this.stateTime += dt;
-	this.attentionTime += dt;
+	this.intervalTimer += dt;
 
 	if (!CONFIG.host) {
 		if (this.actor.doPath(false, false)) {
@@ -204,23 +206,23 @@ AI.prototype.act = function() {
 			break;
 		}
 		case PatronState.WantToOrder: {
-			if (this.attentionTime > AICONFIG.WantToOrder.timing[TimingLevel.Satisfactory]) {
+			if (this.intervalTimer > AICONFIG.WantToOrder.timing[TimingLevel.Satisfactory]) {
 				this.actor.say([ TILES.ui_attention ]);
 				this.cmd(this.addSatisfaction, -1);
-				this.attentionTime = 0;
+				this.intervalTimer = 0;
 			}
 			break;
 		}
 		case PatronState.WaitingDelivery: {
-			if (this.attentionTime > AICONFIG.WaitingDelivery.timing[TimingLevel.Satisfactory]) {
+			if (this.intervalTimer > AICONFIG.WaitingDelivery.timing[TimingLevel.Satisfactory]) {
 				this.actor.say([ TILES.ui_question ]);
 				this.cmd(this.addSatisfaction, -1);
-				this.attentionTime = 0;
+				this.intervalTimer = 0;
 			}
 			break;
 		}
 		case PatronState.Content: {
-			if (this.stateTime > AICONFIG.ContentTime * 0.5 && this.drunkenness >= AICONFIG.VomitThreshold) {
+			if (this.stateTime > AICONFIG.ContentTime * 0.5 && this.drunkenness >= AICONFIG.DrunkennessVomitThreshold) {
 				this.actor.say([ TILES.ui_ill ]);
 				this.changeState(PatronState.Ill);
 			} else if (this.stateTime > AICONFIG.ContentTime) {
@@ -230,7 +232,11 @@ AI.prototype.act = function() {
 			break;
 		}
 		case PatronState.Ill: {
-			// TODO: Vomit :)
+			if (this.intervalTimer > AICONFIG.VomitInterval) {
+				this.actor.say([ TILES.ui_ill ]);
+				this.actor.cmd(this.actor.vomit);
+				game.cmd(game.addReputation, AICONFIG.VomitReputation);
+			}
 			break;
 		}
 		case PatronState.Leaving: {

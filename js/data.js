@@ -354,6 +354,11 @@ var TILES = {
 		container: "fish"
 	},
 
+	vomit: {
+		name: "vomit", desc: "That's a pool of vomit",
+		tileCoords: [ 11, 11 ], walkable: true, transparent: true
+	},
+
 	altar: {
 		tileCoords: [ 8, 7 ], walkable: true, transparent: true,
 		desc: "Gods offer favors for sacrifices on this altar",
