@@ -3,7 +3,8 @@ var PatronState = {
 	Moving: 0,
 	WantToOrder: 1,
 	WaitingDelivery: 2,
-	Content: 3
+	Content: 3,
+	Leaving: 4
 };
 
 var TimingLevel = {
@@ -12,11 +13,12 @@ var TimingLevel = {
 	Poor: 2,
 	Crap: 3,
 	Unacceptable: 4,
-	NumLevels : 5
+	NumLevels: 5
 };
 
 var AICONFIG = {
 	ContentTime: 12,
+	SatisfactionLeaveThreshold: -2,
 	WantToOrder: {
 		timing: [ 1, 8, 12, 18, 999999 ],
 		satisfaction: [ 1, 0, -1, -2, -3 ]
@@ -58,6 +60,7 @@ AI.prototype.changeStateUnsynced = function(newState) {
 	this.state = newState;
 	this.stateTime = 0;
 	this.attentionTime = 0;
+	this.target = null;
 };
 
 AI.prototype.handleSatisfaction = function(config) {
@@ -98,7 +101,8 @@ AI.prototype.setOrder = function setOrder(id) {
 
 AI.prototype.interactWithMe = function(other) {
 	switch (this.state) {
-		case PatronState.Moving: {
+		case PatronState.Moving:
+		case PatronState.Leaving: {
 			// Skip while moving
 			break;
 		}
@@ -164,15 +168,20 @@ AI.prototype.act = function() {
 		return;
 	}
 
+	if (this.state != PatronState.Leaving && this.satisfaction < AICONFIG.SatisfactionLeaveThreshold) {
+		this.actor.say([ TILES.ui_angry ]);
+		this.changeState(PatronState.Leaving);
+	}
+
 	switch (this.state) {
 		case PatronState.Moving: {
-			if (this.stateTime > 5) { // If not reached target in a timely fashion, try again
+			if (this.stateTime > 4) { // If not reached target in a timely fashion, try again
 				this.stateTime = 0;
-				this.target = 0;
+				this.target = null;
 			}
 			if (!this.target) {
 				var chair = randElem(world.dungeon.chairs);
-				if (chair) {
+				if (chair && world.dungeon.getPassable(chair[0], chair[1])) {
 					this.target = chair;
 				} else {
 					return this.drunkAI();
@@ -204,6 +213,20 @@ AI.prototype.act = function() {
 			if (this.stateTime > AICONFIG.ContentTime) {
 				this.actor.say([ TILES.ui_attention ]);
 				this.changeState(PatronState.WantToOrder);
+			}
+			break;
+		}
+		case PatronState.Leaving: {
+			if (!this.target) {
+				this.target = world.dungeon.end;
+			}
+			var target = this.target;
+			this.actor.moveTo(target[0], target[1]);
+			this.actor.doPath(false, false);
+			if (target[0] == this.actor.pos[0] && target[1] == this.actor.pos[1]) {
+				this.actor.cmd(this.actor.kill);
+			} else if (this.stateTime > 15) { // Fail safe is way is blocked
+				this.actor.cmd(this.actor.kill);
 			}
 			break;
 		}

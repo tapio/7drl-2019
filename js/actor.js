@@ -200,6 +200,10 @@ Actor.prototype.sayDeserialize = function sayDeserialize(msg) {
 	world.dungeon.needsRender = true;
 };
 
+Actor.prototype.kill = function kill() {
+	this.health = 0;
+};
+
 Actor.prototype.act = function() {
 	if (this.health <= 0)
 		return true;
