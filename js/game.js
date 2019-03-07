@@ -34,6 +34,18 @@ function Game() {
 			else console.log("No game." + funcName);
 		}
 	};
+
+	// Load save
+	var gamesave = window.localStorage.getItem("GAMESAVE");
+	if (gamesave) {
+		gamesave = JSON.parse(gamesave);
+		for (var i in GAMESAVE) {
+			if (gamesave.hasOwnProperty(i))
+				GAMESAVE[i] = gamesave[i];
+		}
+	}
+	if (CONFIG.debug)
+		GAMESAVE.unlockedLevel = LEVELS.length - 1;
 }
 
 Game.prototype.reset = function() {
@@ -41,6 +53,10 @@ Game.prototype.reset = function() {
 	this.reputation = 0;
 	this.timeLeft = GAMECONFIG.dayDuration;
 	this.timeSinceSpawn = GAMECONFIG.spawnInterval / 2; // Spawn sooner the first time
+};
+
+Game.prototype.save = function() {
+	window.localStorage.setItem("GAMESAVE", JSON.stringify(GAMESAVE));
 };
 
 Game.prototype.update = function(dt) {

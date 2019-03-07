@@ -21,7 +21,7 @@ function UI(player) {
 		reputation: $("#reputation"),
 		invItems: $("#inv-items")
 	};
-	CONFIG.debug = window.location.search.indexOf("?debug") != -1;
+
 	// Load settings
 	var savedSettings = window.localStorage.getItem("SETTINGS");
 	if (savedSettings) {
@@ -33,20 +33,6 @@ function UI(player) {
 	}
 	function saveSettings() {
 		window.localStorage.setItem("SETTINGS", JSON.stringify(SETTINGS));
-	}
-	// Load save
-	var gamesave = window.localStorage.getItem("GAMESAVE");
-	if (gamesave) {
-		gamesave = JSON.parse(gamesave);
-		for (var i in GAMESAVE) {
-			if (gamesave.hasOwnProperty(i))
-				GAMESAVE[i] = gamesave[i];
-		}
-	}
-	if (CONFIG.debug)
-		GAMESAVE.unlockedLevel = LEVELS.length - 1;
-	function saveGame() {
-		window.localStorage.setItem("GAMESAVE", JSON.stringify(GAMESAVE));
 	}
 
 	this.resetDisplay();
@@ -531,6 +517,28 @@ UI.prototype.end = function() {
 	$("#end-gold").innerHTML = game.gold;
 	$("#end-reputation").innerHTML = game.reputation;
 	world.running = false;
+
+	var score = game.gold + game.reputation;
+	var stars = 0;
+	if (score >= 200)
+		stars = 3;
+	else if (score >= 150)
+		stars = 2;
+	else if (score >= 100)
+		stars = 1;
+	$("#star1").className = stars >= 1 ? "star" : "star-dim";
+	$("#star2").className = stars >= 2 ? "star" : "star-dim";
+	$("#star3").className = stars >= 3 ? "star" : "star-dim";
+
+	if (GAMESAVE.unlockedLevel >= LEVELS.length - 1) {
+		$("#end-unlock-info").innerHTML = ""; // Nothing to achieve anymore :/
+	} else if (stars < 2) {
+		$("#end-unlock-info").innerHTML = "Get at least 🍺🍺 to unlock next level!";
+	} else if (stars >= 2) {
+		GAMESAVE.unlockedLevel++;
+		game.save();
+		$("#end-unlock-info").innerHTML = "You unlocked " + LEVELS[GAMESAVE.unlockedLevel].name + "!!!";
+	}
 };
 
 UI.prototype.showNetworkError = function(errMsg) {

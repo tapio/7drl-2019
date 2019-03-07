@@ -272,7 +272,7 @@ h1 {
 }
 #end > div {
 	position: relative;
-	top: 30%;
+	top: 10%;
 }
 
 #status {
@@ -325,6 +325,22 @@ h1 {
 	-ms-user-select: none;
 	user-select: none;
 	pointer-events: none;
+}
+
+.star {
+	background-image: url(../assets/star.png);
+	background-repeat: no-repeat;
+	display: inline-block;
+	width: 72px;
+	height: 72px;
+}
+
+.star-dim {
+	background-image: url(../assets/star-dim.png);
+	background-repeat: no-repeat;
+	display: inline-block;
+	width: 72px;
+	height: 72px;
 }
 
 .sprite {

@@ -2,6 +2,8 @@ var camera, ui, world, game; // Globals
 
 window.onload = function() {
 	try {
+		CONFIG.debug = window.location.search.indexOf("?debug") != -1;
+
 		camera = {};
 		world = new World();
 		game = new Game();
