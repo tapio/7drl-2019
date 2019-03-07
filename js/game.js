@@ -81,6 +81,10 @@ Game.prototype.addReputation = function addReputation(amount) {
 	this.reputation += amount;
 };
 
+Game.prototype.removeItem = function removeItem(x, y) {
+	world.dungeon.setTile(x, y, null, Dungeon.LAYER_ITEM);
+};
+
 Game.prototype.cmd = function(func, ...args) {
 	if (ui.client)
 		ui.client.addCmd("game", func.name, args)

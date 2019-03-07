@@ -108,7 +108,7 @@ Actor.prototype.doPath = function(checkItems, checkMapChange) {
 		if (checkItems && item && atDestination) {
 			this.animPos = lerpVec2(this.pos, waypoint, 0.2);
 			if (this.tryPickUp(item)) {
-				world.dungeon.setTile(waypoint[0], waypoint[1], null, Dungeon.LAYER_ITEM);
+				game.cmd(game.removeItem, waypoint[0], waypoint[1]);
 			}
 			return true;
 		}
