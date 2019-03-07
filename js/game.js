@@ -55,6 +55,18 @@ Game.prototype.reset = function() {
 	this.timeSinceSpawn = GAMECONFIG.spawnInterval / 2; // Spawn sooner the first time
 };
 
+Game.prototype.calculateStars = function() {
+	var score = game.gold + game.reputation;
+	var stars = 0;
+	if (score >= 200)
+		stars = 3;
+	else if (score >= 150)
+		stars = 2;
+	else if (score >= 100)
+		stars = 1;
+	return stars;
+}
+
 Game.prototype.save = function() {
 	window.localStorage.setItem("GAMESAVE", JSON.stringify(GAMESAVE));
 };

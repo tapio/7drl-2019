@@ -518,14 +518,7 @@ UI.prototype.end = function() {
 	$("#end-reputation").innerHTML = game.reputation;
 	world.running = false;
 
-	var score = game.gold + game.reputation;
-	var stars = 0;
-	if (score >= 200)
-		stars = 3;
-	else if (score >= 150)
-		stars = 2;
-	else if (score >= 100)
-		stars = 1;
+	var stars = game.calculateStars();
 	$("#star1").className = stars >= 1 ? "star" : "star-dim";
 	$("#star2").className = stars >= 2 ? "star" : "star-dim";
 	$("#star3").className = stars >= 3 ? "star" : "star-dim";
