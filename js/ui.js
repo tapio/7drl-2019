@@ -248,8 +248,12 @@ function UI(player) {
 	var handleHash = (function() {
 		var hash = window.location.hash;
 		closeAllMenus();
+		if (hash == "#new" && !this.hostingChoice) {
+			window.location.hash = "#main";
+			return;
+		}
 		var whitelist = [ "#main", "#new", "#help", "#about" ];
-		if (hash.length < 2 || (whitelist.indexOf(hash) == -1 && this.characterChoice === null)) {
+		if (hash.length < 2 || (whitelist.indexOf(hash) == -1 && !this.hostingChoice)) {
 			window.location.hash = "#main";
 			return;
 		}
