@@ -233,6 +233,7 @@ AI.prototype.act = function() {
 		}
 		case PatronState.Ill: {
 			if (this.intervalTimer > AICONFIG.VomitInterval) {
+				this.intervalTimer = 0;
 				this.actor.say([ TILES.ui_ill ]);
 				this.actor.cmd(this.actor.vomit);
 				game.cmd(game.addReputation, AICONFIG.VomitReputation);
