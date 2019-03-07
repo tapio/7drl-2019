@@ -200,6 +200,15 @@ h1 {
 	width: 200px;
 }
 
+.btn-text-thin {
+	padding-left: 20px;
+	padding-right: 20px;
+	font-size: 20px;
+	width: 200px;
+	line-height: 30px;
+	height: 32px;
+}
+
 .btn-compact {
 	font-size: 18px;
 	width: 100px;

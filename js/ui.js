@@ -113,7 +113,7 @@ function UI(player) {
 		for (var i = 0; i < LEVELS.length; ++i) {
 			var level = LEVELS[i];
 			var elem = document.createElement("div");
-			elem.className = "btn btn-text";
+			elem.className = "btn btn-text-thin";
 			if (i > GAMESAVE.unlockedLevel) {
 				elem.classList.add("btn-disabled");
 			} else if (i == GAMESAVE.unlockedLevel) {
