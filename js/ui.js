@@ -184,6 +184,9 @@ function UI(player) {
 	$("#end-restart").addEventListener("click", function() {
 		window.location.reload(); // TODO: More graceful restart preserving players
 	}, false);
+	$("#disconnected-restart").addEventListener("click", function() {
+		window.location.reload(); // TODO: More graceful restart preserving players
+	}, false);
 	$("#new-male").addEventListener("click", function() {
 		this.classList.add("btn-selected");
 		$("#new-female").classList.remove("btn-selected");
@@ -222,6 +225,10 @@ function UI(player) {
 		$("#wait-gameid").innerHTML = ui.gameName;
 		var neededPlayers = ui.hostingChoice === "solo" ? 1 : 2;
 		(function checkStart() {
+			if (window.location.hash == "#disconnected") {
+				$("#wait").style.display = "none";
+				return;
+			}
 			if (world.dungeon.actors.length < neededPlayers) {
 				$("#wait").style.display = "block";
 				window.setTimeout(checkStart, 100);
@@ -523,5 +530,13 @@ UI.prototype.end = function() {
 	$("#end").style.display = "block";
 	$("#end-gold").innerHTML = game.gold;
 	$("#end-reputation").innerHTML = game.reputation;
+	world.running = false;
+};
+
+UI.prototype.showNetworkError = function(errMsg) {
+	if (errMsg)
+		$("#disconnected-msg").innerHTML = errMsg;
+	$("#disconnected").style.display = "block";
+	window.location.hash = "#disconnected";
 	world.running = false;
 };

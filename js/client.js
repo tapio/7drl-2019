@@ -95,10 +95,12 @@ function Client(params) {
 
 	this.socket.onclose = (function() {
 		if (pingInterval) window.clearInterval(pingInterval);
-		if (this.connected) ui.msg("Connection terminated!");
-		else ui.msg("Connection failed!");
+		if (this.connected) msg = "Connection terminated!";
+		else msg = "Connection failed!";
+		ui.msg(msg);
 		this.connected = false;
 		if (this.actor) this.actor.id = null;
+		ui.showNetworkError(msg);
 	}).bind(this);
 }
 
