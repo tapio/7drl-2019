@@ -411,7 +411,7 @@ UI.prototype.vibrate = function(pattern, source) {
 };
 
 UI.prototype.update = function() {
-	if (!world.running) {
+	/*if (!world.running) {
 		var actors = world.dungeon.actors;
 		var text = actors.length ? "" : "No one yet";
 		for (var i = 0; i < actors.length; i++) {
@@ -420,7 +420,7 @@ UI.prototype.update = function() {
 				text += ", ";
 		}
 		$("#wait-players").innerHTML = text;
-	}
+	}*/
 
 	if (this.messagesDirty) {
 		var msgBuf = "";
