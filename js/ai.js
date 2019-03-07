@@ -198,6 +198,7 @@ AI.prototype.act = function() {
 		case PatronState.WantToOrder: {
 			if (this.attentionTime > AICONFIG.WantToOrder.timing[TimingLevel.Satisfactory]) {
 				this.actor.say([ TILES.ui_attention ]);
+				this.cmd(this.addSatisfaction, -1);
 				this.attentionTime = 0;
 			}
 			break;
@@ -205,6 +206,7 @@ AI.prototype.act = function() {
 		case PatronState.WaitingDelivery: {
 			if (this.attentionTime > AICONFIG.WaitingDelivery.timing[TimingLevel.Satisfactory]) {
 				this.actor.say([ TILES.ui_question ]);
+				this.cmd(this.addSatisfaction, -1);
 				this.attentionTime = 0;
 			}
 			break;
