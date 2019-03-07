@@ -19,6 +19,11 @@ var SETTINGS = {
 	tileMag: 2
 };
 
+// Also saved to localStorage
+var GAMESAVE = {
+	unlockedLevel: 0
+};
+
 var TILES = {
 	empty: {
 		tileCoords: [ 0, 23 ], walkable: false, transparent: false,
@@ -639,7 +644,7 @@ var SOUNDS = {
 
 var LEVELS = [
 	{
-		name: "Inn",
+		name: "Level 1",
 		desc: "The Pranching Pony",
 		generator: "inn",
 		width: 16,
@@ -659,7 +664,7 @@ var LEVELS = [
 		drinks: [ TILES.beer, TILES.booze ],
 		food: [ TILES.stew ]
 	},{
-		name: "Inn",
+		name: "Level 2",
 		desc: "The Pranching Pony",
 		generator: "inn",
 		width: 16,
@@ -678,7 +683,26 @@ var LEVELS = [
 		drinks: [ TILES.beer, TILES.wine, TILES.booze ],
 		food: [ TILES.chicken, TILES.stew ]
 	},{
-		name: "Inn",
+		name: "Level 3",
+		desc: "The Pranching Pony",
+		generator: "inn",
+		width: 20,
+		height: 15,
+		wall: [ TILES.wall_stone2 ],
+		floor: [ TILES.floor_marble_a, TILES.floor_marble_b, TILES.floor_marble_c, TILES.floor_marble_d ],
+		table: [ TILES.table ],
+		counter: [ TILES.counter ],
+		chair: [ TILES.chair_left, TILES.chair_right ],
+		decor: [ TILES.cupboard, TILES.pot ],
+		decorAmount: 10,
+		mobs: [ MOBS.goblin ],
+		mobAmount: 0,
+		items: [ ],
+		itemAmount: 0,
+		drinks: [ TILES.beer, TILES.wine, TILES.champagne, TILES.booze ],
+		food: [ TILES.chicken, TILES.fish ]
+	},{
+		name: "Level 4",
 		desc: "The Pranching Pony",
 		generator: "inn",
 		width: 20,

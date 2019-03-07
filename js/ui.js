@@ -9,6 +9,7 @@ function UI(player) {
 	this.pressed = [];
 	this.characterChoice = null;
 	this.hostingChoice = null;
+	this.levelChoice = LEVELS[0];
 	this.gameName = "";
 	this.playerName = "Noname";
 	this.client = null;
@@ -20,6 +21,7 @@ function UI(player) {
 		reputation: $("#reputation"),
 		invItems: $("#inv-items")
 	};
+	CONFIG.debug = window.location.search.indexOf("?debug") != -1;
 	// Load settings
 	var savedSettings = window.localStorage.getItem("SETTINGS");
 	if (savedSettings) {
@@ -32,9 +34,22 @@ function UI(player) {
 	function saveSettings() {
 		window.localStorage.setItem("SETTINGS", JSON.stringify(SETTINGS));
 	}
+	// Load save
+	var gamesave = window.localStorage.getItem("GAMESAVE");
+	if (gamesave) {
+		gamesave = JSON.parse(gamesave);
+		for (var i in GAMESAVE) {
+			if (gamesave.hasOwnProperty(i))
+				GAMESAVE[i] = gamesave[i];
+		}
+	}
+	if (CONFIG.debug)
+		GAMESAVE.unlockedLevel = LEVELS.length - 1;
+	function saveGame() {
+		window.localStorage.setItem("GAMESAVE", JSON.stringify(GAMESAVE));
+	}
 
 	this.resetDisplay();
-	CONFIG.debug = window.location.search.indexOf("?debug") != -1;
 	window.addEventListener('resize', this.resetDisplay.bind(this));
 	document.addEventListener('keydown', this.onKeyDown.bind(this), false);
 	document.addEventListener('keyup', this.onKeyUp.bind(this), false);
@@ -71,39 +86,79 @@ function UI(player) {
 		return randomInt.toString(32).replace(/[ilou]/, function (a) { return key[a]; });
 	}
 	function validateNewGame() {
-		var valid = !!ui.characterChoice && !!ui.hostingChoice && !!ui.gameName /*&& !!ui.playerName*/;
+		var valid = !!ui.hostingChoice && (!!ui.characterChoice || ui.hostingChoice === "host-only") && !!ui.gameName /*&& !!ui.playerName*/;
 		if (valid)
 			$("#new-ok").classList.remove("btn-disabled");
 		else
 			$("#new-ok").classList.add("btn-disabled");
 	}
+	function onClickLevelButton(e) {
+		// this = clicked element
+		$("#new-level-select > div", function(elem) { elem.classList.remove("btn-selected"); });
+		ui.levelChoice = LEVELS[this.dataset.index];
+		world.resetMap(ui.levelChoice);
+		this.classList.add("btn-selected");
+		validateNewGame();
+	}
+	function setupGameSetupScreen() {
+		var hostOnly = ui.hostingChoice === "host-only";
+		var joinOnly = ui.hostingChoice === "join";
+		$("#new-host-only-info").style.display = hostOnly ? "block" : "none";
+		$("#new-character-select").style.display = hostOnly ? "none" : "block";
+		//$("#new-name").style.display = hostOnly ? "none" : "block";
+		$("#join-game-name").style.display = joinOnly ? "block" : "none";
+		$("#new-level-select").style.display = joinOnly ? "none" : "block";
+		// Generate level buttons
+		$("#new-level-select").innerHTML = "";
+		for (var i = 0; i < LEVELS.length; ++i) {
+			var level = LEVELS[i];
+			var elem = document.createElement("div");
+			elem.className = "btn btn-text";
+			if (i > GAMESAVE.unlockedLevel) {
+				elem.classList.add("btn-disabled");
+			} else if (i == GAMESAVE.unlockedLevel) {
+				ui.levelChoice = level;
+				elem.classList.add("btn-selected");
+			}
+			elem.innerHTML = level.name;
+			elem.dataset.index = i;
+			elem.addEventListener("click", onClickLevelButton);
+			$("#new-level-select").appendChild(elem);
+		}
+		var spacer = document.createElement("div");
+		spacer.innerHTML = "&nbsp;";
+		$("#new-level-select").appendChild(spacer);
+		world.resetMap(ui.levelChoice);
+		validateNewGame();
+	}
 	$("#new-solo").addEventListener("click", function() {
 		ui.hostingChoice = "solo";
 		ui.gameName = "__solo__";
-		$("#join-game-name").classList.add("hidden");
+		setupGameSetupScreen();
 	}, false);
 	$("#new-join").addEventListener("click", function() {
 		ui.hostingChoice = "join";
-		$("#join-game-name").classList.remove("hidden");
+		ui.gameName = "";
+		setupGameSetupScreen();
 	}, false);
 	$("#new-host-join").addEventListener("click", function() {
 		ui.hostingChoice = "host-join";
 		ui.gameName = genGameId();
-		$("#join-game-name").classList.add("hidden");
+		setupGameSetupScreen();
 	}, false);
 	$("#new-host-only").addEventListener("click", function() {
 		ui.hostingChoice = "host-only";
 		ui.gameName = genGameId();
-		$("#join-game-name").classList.add("hidden");
+		setupGameSetupScreen();
 	}, false);
 	$("#join-game-name").addEventListener("input", function() {
 		ui.gameName = this.value;
 		validateNewGame();
 	}, false);
-	$("#new-name").addEventListener("input", function() {
-		ui.playerName = this.value.toLowerCase();
-		validateNewGame();
-	}, false);
+	//$("#new-name").addEventListener("input", function() {
+	//	ui.playerName = this.value.toLowerCase();
+	//	validateNewGame();
+	//}, false);
 	$("#main-fullscreen").addEventListener("click", toggleFullscreen, false);
 	$("#new-fullscreen").addEventListener("click", toggleFullscreen, false);
 	$("#pausemenu-fullscreen").addEventListener("click", toggleFullscreen, false);

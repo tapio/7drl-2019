@@ -3,11 +3,13 @@ var debugDisplay; // = new ROT.Display({width: 100, height: 100, fontSize: 6});
 
 function World() {
 	"use strict";
-	this.maps = [ new Dungeon(0, LEVELS[randInt(0, LEVELS.length-1)]) ];
-	this.dungeon = this.maps[0];
+	this.maps = [];
+	this.dungeon = null;
 	this.roundTimer = 0;
 	this.running = false;
 	this.mapChanged = false;
+
+	this.resetMap(LEVELS[Math.min(GAMESAVE.unlockedLevel, LEVELS.length-1)]);
 
 	if (debugDisplay)
 		for (var j = 0; j < this.dungeon.height; ++j)
@@ -15,6 +17,11 @@ function World() {
 				if (!this.dungeon.map[i + j * this.dungeon.width].walkable)
 					debugDisplay.draw(i, j, "#");
 }
+
+World.prototype.resetMap = function(mapDef) {
+	this.maps = [ new Dungeon(0, mapDef) ];
+	this.dungeon = this.maps[0];
+};
 
 World.prototype.addActor = function(actor) {
 	this.dungeon.actors.push(actor);

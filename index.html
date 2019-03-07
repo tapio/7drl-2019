@@ -66,11 +66,17 @@
 	</div>
 	<div id="new" class="modal">
 		<div class="menu center">
-			<h1>Create Your Bartender</h1>
-			<div id="new-male" class="btn btn-square"><div class="sprite sprite2x male"></div></div>
-			<div id="new-female" class="btn btn-square"><div class="sprite sprite2x female"></div></div>
-			<input type="text" class="input-box" id="new-name" name="new-name" placeholder="Name" minlength=1 maxlength="16">
+			<h1>Game Setup</h1>
+			<div id="new-character-select">
+				<div id="new-male" class="btn btn-square"><div class="sprite sprite2x male"></div></div>
+				<div id="new-female" class="btn btn-square"><div class="sprite sprite2x female"></div></div>
+			<!--<input type="text" class="input-box" id="new-name" name="new-name" placeholder="Name" minlength=1 maxlength="16">-->
+			</div>
+			<p id="new-host-only-info">This mode is meant for spectating the game on larger computer screen,
+				while players join with mobile devices.</p>
 			<input type="text" class="input-box" id="join-game-name" name="join-game-name" placeholder="Game Name" maxlength="4" autocorrect="off" autocapitalize="none">
+			<div id="new-level-select">
+			</div>
 			<div><a href="#game" id="new-ok" class="btn btn-text btn-disabled">Let's Go</a></div>
 			<div>&nbsp;</div>
 			<div id="new-fullscreen" class="btn btn-text">Fullscreen</div>
