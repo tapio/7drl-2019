@@ -1,7 +1,8 @@
 #!/usr/bin/env node
 var PORT = parseInt(process.env.PORT, 10) || 10666;
 var VERBOSITY = parseInt(process.env.VERBOSE, 10) || 1;
-var WebSocketServer = require('ws').Server;
+const WebSocket = require('ws');
+
 var fs = require('fs');
 
 var games = {};
@@ -49,12 +50,16 @@ Player.prototype.broadcast = function(data, metoo) {
 	var players = this.game.players;
 	for (var i in players) {
 		if ((i !== this.id || metoo) && players[i])
-			players[i].socket.send(serialized);
+			players[i].socket.send(serialized, socketCallback);
 	}
 };
 
+function socketCallback(err) {
+	if (err && VERBOSITY > 0)
+		console.log(err.message);
+}
 
-var server = new WebSocketServer({ port: PORT });
+var server = new WebSocket.Server({ port: PORT });
 server.on('connection', function(ws) {
 	var id = "P" + (nextPlayerId++);
 	var pl = new Player(ws, id);
@@ -73,11 +78,11 @@ server.on('connection', function(ws) {
 			case "join":
 				pl.join(msg.game);
 				if (VERBOSITY > 0) console.log(pl.id + " joins game " + msg.game + " (" + pl.game.numPlayers + " players)");
-				ws.send(JSON.stringify({ type: "joined", id: pl.id, data: pl.game.data })); // Inform newcomer about the id
+				ws.send(JSON.stringify({ type: "joined", id: pl.id, data: pl.game.data }), socketCallback); // Inform newcomer about the id
 				pl.broadcast({ type: "join", id: pl.id }); // Inform others
 				break;
 			case "ping":
-				ws.send('{"type":"pong"}');
+				ws.send('{"type":"pong"}', socketCallback);
 				break;
 			// Unknown, just pass it along
 			default:
@@ -86,7 +91,7 @@ server.on('connection', function(ws) {
 					var toPl = pl.game.players[msg.to];
 					delete msg.to;
 					if (toPl)
-						toPl.socket.send(JSON.stringify(msg));
+						toPl.socket.send(JSON.stringify(msg), socketCallback);
 				} else {
 					pl.broadcast(msg, false);
 				}
