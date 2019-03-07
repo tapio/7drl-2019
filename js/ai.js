@@ -4,7 +4,8 @@ var PatronState = {
 	WantToOrder: 1,
 	WaitingDelivery: 2,
 	Content: 3,
-	Leaving: 4
+	Ill: 4,
+	Leaving: 5
 };
 
 var TimingLevel = {
@@ -19,6 +20,7 @@ var TimingLevel = {
 var AICONFIG = {
 	ContentTime: 12,
 	SatisfactionLeaveThreshold: -2,
+	VomitThreshold: 3,
 	WantToOrder: {
 		timing: [ 1, 8, 12, 18, 999999 ],
 		satisfaction: [ 1, 0, -1, -2, -3 ]
@@ -129,13 +131,14 @@ AI.prototype.interactWithMe = function(other) {
 				ui.msg(this.actor.name + ": Thanks!", other);
 				var satisfactionLevel = this.handleSatisfaction(AICONFIG.WaitingDelivery);
 				this.actor.say(AICONFIG.emotes[satisfactionLevel]);
-				this.cmd(this.addDrunkenness, 1);
 				if (item.drink) {
 					this.cmd(this.addHunger, 0.5);
 					this.cmd(this.addThirst, -1);
+					this.cmd(this.addDrunkenness, 1);
 				} else if (item.food) {
 					this.cmd(this.addHunger, -1);
 					this.cmd(this.addThirst, 1);
+					this.cmd(this.addDrunkenness, -0.25);
 				}
 				ui.snd("powerup", this.actor);
 				this.order = null;
@@ -151,6 +154,11 @@ AI.prototype.interactWithMe = function(other) {
 		}
 		case PatronState.Content: {
 			// TODO: Show some emoji
+			break;
+		}
+		case PatronState.Ill: {
+			// Kick out
+			this.changeState(PatronState.Leaving);
 			break;
 		}
 	}
@@ -212,10 +220,17 @@ AI.prototype.act = function() {
 			break;
 		}
 		case PatronState.Content: {
-			if (this.stateTime > AICONFIG.ContentTime) {
+			if (this.stateTime > AICONFIG.ContentTime * 0.5 && this.drunkenness >= AICONFIG.VomitThreshold) {
+				this.actor.say([ TILES.ui_ill ]);
+				this.changeState(PatronState.Ill);
+			} else if (this.stateTime > AICONFIG.ContentTime) {
 				this.actor.say([ TILES.ui_attention ]);
 				this.changeState(PatronState.WantToOrder);
 			}
+			break;
+		}
+		case PatronState.Ill: {
+			// TODO: Vomit :)
 			break;
 		}
 		case PatronState.Leaving: {
