@@ -12,6 +12,7 @@ function createGame(id, host, data) {
 	games[id] = {
 		id: id,
 		host: host,
+		locked: false,
 		data: data,
 		players: {},
 		numPlayers: 0,
@@ -27,9 +28,6 @@ function Player(socket, id, game) {
 Player.prototype.join = function(game) {
 	if (!this.id) return; // Id is required
 	this.leave(); // Leave if already in game
-	// Create game if not present
-	if (!games[game])
-		createGame(game, this, null);
 	this.game = games[game]; // Cache reference
 	this.game.players[this.id] = this; // Join
 	this.game.numPlayers++;
@@ -76,10 +74,25 @@ server.on('connection', function(ws) {
 				break;
 			// Join game
 			case "join":
+				if (!games[msg.game]) {
+					ws.send(JSON.stringify({ type: "error", msg: "No game named \"" + msg.game + "\"!" }), socketCallback);
+					break;
+				}
+				if (games[msg.game].locked) {
+					ws.send(JSON.stringify({ type: "error", msg: "Game already in progress!" }), socketCallback);
+					break;
+				}
 				pl.join(msg.game);
 				if (VERBOSITY > 0) console.log(pl.id + " joins game " + msg.game + " (" + pl.game.numPlayers + " players)");
 				ws.send(JSON.stringify({ type: "joined", id: pl.id, data: pl.game.data }), socketCallback); // Inform newcomer about the id
 				pl.broadcast({ type: "join", id: pl.id }); // Inform others
+				break;
+			// Disallow joining
+			case "lock":
+				if (pl.game) {
+					pl.game.locked = true;
+					if (VERBOSITY > 0) console.log(pl.id + " locked game " + pl.game.id);
+				}
 				break;
 			case "ping":
 				ws.send('{"type":"pong"}', socketCallback);

@@ -31,6 +31,8 @@ World.prototype.addActor = function(actor) {
 World.prototype.start = function() {
 	this.dungeon.update();
 	this.running = true;
+	if (ui.client && CONFIG.host)
+		ui.client.lock();
 };
 
 World.prototype.update = function(dt) {

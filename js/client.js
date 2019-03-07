@@ -90,6 +90,10 @@ function Client(params) {
 			case "pong":
 				this.ping = performance.now() - pingTime;
 				break;
+			case "error":
+				ui.msg("Server error: " + msg.msg);
+				ui.showNetworkError(msg.msg);
+				break;
 		}
 	}).bind(this);
 
@@ -104,6 +108,11 @@ function Client(params) {
 	}).bind(this);
 }
 
+Client.prototype.lock = function() {
+	if (this.connected)
+		this.send({ type: "lock" });
+};
+
 Client.prototype.addCmd = function(cmdType, ...params) {
 	this.commands.push({
 		type: cmdType,
@@ -112,7 +121,7 @@ Client.prototype.addCmd = function(cmdType, ...params) {
 };
 
 Client.prototype.sendPendingCommands = function() {
-	if (this.commands.length > 0) {
+	if (this.connected && this.commands.length > 0) {
 		this.send({
 			type: "cmds",
 			cmds: this.commands
