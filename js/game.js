@@ -1,6 +1,6 @@
 var GAMECONFIG = {
 	dayDuration: 3*60, // seconds
-	spawnInterval: 10
+	spawnInterval: 12
 };
 
 function Game() {
@@ -52,7 +52,7 @@ Game.prototype.reset = function() {
 	this.gold = 0;
 	this.reputation = 0;
 	this.timeLeft = GAMECONFIG.dayDuration;
-	this.timeSinceSpawn = GAMECONFIG.spawnInterval / 2; // Spawn sooner the first time
+	this.timeSinceSpawn = 5; // Spawn sooner the first time
 };
 
 Game.prototype.calculateStars = function() {
