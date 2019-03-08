@@ -479,6 +479,39 @@ var TILES = {
 		anim: [ [ 26, 0 ], [ 27, 0 ], [ 28, 0 ], [ 27, 0 ] ]
 	},
 
+	patron_male_a: {
+		tileCoords: [ 24, 4 ], walkable: false, transparent: true,
+		desc: "Old man",
+		anim: [ [ 23, 4 ], [ 24, 4 ], [ 25, 4 ], [ 24, 4 ] ]
+	},
+	patron_female_a: {
+		tileCoords: [ 27, 4 ], walkable: false, transparent: true,
+		desc: "Old female",
+		anim: [ [ 26, 4 ], [ 27, 4 ], [ 28, 4 ], [ 27, 4 ] ]
+	},
+	patron_male_b: {
+		tileCoords: [ 24, 5 ], walkable: false, transparent: true,
+		desc: "Patron",
+		anim: [ [ 23, 5 ], [ 24, 5 ], [ 25, 5 ], [ 24, 5 ] ]
+	},
+	patron_female_b: {
+		tileCoords: [ 24, 6 ], walkable: false, transparent: true,
+		desc: "Patron",
+		anim: [ [ 23, 6 ], [ 24, 6 ], [ 25, 6 ], [ 24, 6 ] ]
+	},
+	patron_male_c: {
+		tileCoords: [ 27, 5 ], walkable: false, transparent: true,
+		desc: "Patron",
+		anim: [ [ 26, 5 ], [ 27, 5 ], [ 28, 5 ], [ 27, 5 ] ]
+	},
+	patron_female_c: {
+		tileCoords: [ 27, 6 ], walkable: false, transparent: true,
+		desc: "Patron",
+		anim: [ [ 26, 6 ], [ 27, 6 ], [ 28, 6 ], [ 27, 6 ] ]
+	},
+
+
+	
 	skeleton: {
 		tileCoords: [ 30, 0 ], walkable: false, transparent: true,
 		anim: [ [ 29, 0 ], [ 30, 0 ], [ 31, 0 ], [ 30, 0 ] ]
@@ -599,6 +632,42 @@ var MOBS = {
 	},
 	mummy: {
 		name: "Mummy", ch: TILES.mummy.ch, ai: "hunter",
+		desc: "Scary and semi-dangerous",
+		health: 2, vision: 3, speed: 0.75,
+		loot: TILES.coin, lootChance: 0.5
+	},
+	patron_male_a: {
+		name: "Patron", ch: TILES.patron_male_a.ch, ai: "patron",
+		desc: "Scary and semi-dangerous",
+		health: 2, vision: 3, speed: 0.75,
+		loot: TILES.coin, lootChance: 0.5
+	},
+	patron_male_b: {
+		name: "Patron", ch: TILES.patron_male_b.ch, ai: "patron",
+		desc: "Scary and semi-dangerous",
+		health: 2, vision: 3, speed: 0.75,
+		loot: TILES.coin, lootChance: 0.5
+	},
+	patron_male_c: {
+		name: "Patron", ch: TILES.patron_male_c.ch, ai: "patron",
+		desc: "Scary and semi-dangerous",
+		health: 2, vision: 3, speed: 0.75,
+		loot: TILES.coin, lootChance: 0.5
+	},
+	patron_female_a: {
+		name: "Patron", ch: TILES.patron_female_a.ch, ai: "patron",
+		desc: "Scary and semi-dangerous",
+		health: 2, vision: 3, speed: 0.75,
+		loot: TILES.coin, lootChance: 0.5
+	},
+	patron_female_b: {
+		name: "Patron", ch: TILES.patron_female_b.ch, ai: "patron",
+		desc: "Scary and semi-dangerous",
+		health: 2, vision: 3, speed: 0.75,
+		loot: TILES.coin, lootChance: 0.5
+	},
+	patron_female_c: {
+		name: "Patron", ch: TILES.patron_female_c.ch, ai: "patron",
 		desc: "Scary and semi-dangerous",
 		health: 2, vision: 3, speed: 0.75,
 		loot: TILES.coin, lootChance: 0.5
