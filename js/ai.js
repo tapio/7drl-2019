@@ -12,25 +12,27 @@ var TimingLevel = {
 	Excellent: 0,
 	Satisfactory: 1,
 	Poor: 2,
-	Crap: 3,
-	Unacceptable: 4,
-	NumLevels: 5
+	NumLevels: 3
 };
 
 var AICONFIG = {
 	ContentTime: 12,
+	DissatisfiedInterval: 6,
+	WaitingDissatisfaction: -1,
+	ReaskDissatisfaction: -1,
 	SatisfactionLeaveThreshold: -2,
 	DrunkennessVomitThreshold: 3,
 	VomitInterval: 5,
 	VomitReputation: -5,
+	// Let's keep timing satisfaction positive here to avoid them leaving when getting served
 	WantToOrder: {
-		timing: [ 1, 8, 12, 18, 999999 ],
-		satisfaction: [ 1, 0, -1, -2, -3 ]
+		timing: [ 1, 8, 999999 ],
+		satisfaction: [ 1, 0, 0 ]
 	},
 	WaitingDelivery: {
-		timing: [ 5, 10, 15, 20, 999999 ],
-		satisfaction: [ 5, 2, -2, -4, -6 ],
-		gold: [ 1, 1, 1, 1, 1 ]
+		timing: [ 5, 10, 999999 ],
+		satisfaction: [ 2, 1, 0 ],
+		gold: [ 1, 1, 1 ]
 	},
 	emotes: [
 		[ TILES.ui_love ],
@@ -134,7 +136,7 @@ AI.prototype.interactWithMe = function(other) {
 				var satisfactionLevel = this.handleSatisfaction(AICONFIG.WaitingDelivery);
 				this.actor.say(AICONFIG.emotes[satisfactionLevel]);
 				if (item.drink) {
-					this.cmd(this.addHunger, 0.5);
+					this.cmd(this.addHunger, 0.25);
 					this.cmd(this.addThirst, -1);
 					this.cmd(this.addDrunkenness, 1);
 				} else if (item.food) {
@@ -148,8 +150,8 @@ AI.prototype.interactWithMe = function(other) {
 			} else {
 				// Reasking/wrong delivery is not cool
 				ui.msg(this.actor.name + ": Where is my " + this.order.name + "!", other);
-				this.cmd(this.addSatisfaction, -1);
-				game.cmd(game.addReputation, -1);
+				this.cmd(this.addSatisfaction, AICONFIG.ReaskDissatisfaction);
+				game.cmd(game.addReputation, AICONFIG.ReaskDissatisfaction);
 				this.actor.say([ TILES[this.order.id], TILES.ui_question ]);
 			}
 			break;
@@ -206,17 +208,24 @@ AI.prototype.act = function() {
 			break;
 		}
 		case PatronState.WantToOrder: {
-			if (this.intervalTimer > AICONFIG.WantToOrder.timing[TimingLevel.Satisfactory]) {
+			if (this.stateTime <= AICONFIG.WantToOrder.timing[TimingLevel.Satisfactory])
+				break;
+
+			if (this.intervalTimer > AICONFIG.DissatisfiedInterval) {
 				this.actor.say([ TILES.ui_attention ]);
-				this.cmd(this.addSatisfaction, -1);
+				this.cmd(this.addSatisfaction, AICONFIG.WaitingDissatisfaction);
+				game.cmd(game.addReputation, AICONFIG.WaitingDissatisfaction);
 				this.intervalTimer = 0;
 			}
 			break;
 		}
 		case PatronState.WaitingDelivery: {
-			if (this.intervalTimer > AICONFIG.WaitingDelivery.timing[TimingLevel.Satisfactory]) {
+			if (this.stateTime <= AICONFIG.WaitingDelivery.timing[TimingLevel.Satisfactory])
+				break;
+			if (this.intervalTimer > AICONFIG.DissatisfiedInterval) {
 				this.actor.say([ TILES.ui_question ]);
-				this.cmd(this.addSatisfaction, -1);
+				this.cmd(this.addSatisfaction, AICONFIG.WaitingDissatisfaction);
+				game.cmd(game.addReputation, AICONFIG.WaitingDissatisfaction);
 				this.intervalTimer = 0;
 			}
 			break;

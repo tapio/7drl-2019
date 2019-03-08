@@ -58,11 +58,11 @@ Game.prototype.reset = function() {
 Game.prototype.calculateStars = function() {
 	var score = game.gold + game.reputation;
 	var stars = 0;
-	if (score >= 200)
+	if (score >= 100)
 		stars = 3;
-	else if (score >= 150)
+	else if (score >= 75)
 		stars = 2;
-	else if (score >= 100)
+	else if (score >= 50)
 		stars = 1;
 	return stars;
 }
