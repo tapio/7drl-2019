@@ -15,7 +15,6 @@
 	font-family: 'CompassPro';
 	src: url('CompassPro.eot');
 	src: url('CompassPro.eot?#iefix') format('embedded-opentype'),
-		 url('CompassPro.woff2') format('woff2'),
 		 url('CompassPro.woff') format('woff'),
 		 url('CompassPro.ttf') format('truetype'),
 		 url('CompassPro.svg#CompassPro') format('svg');
