@@ -1,5 +1,5 @@
 var CONFIG = {
-	serverAddress: "saluuna.dy.fi:10666",
+	serverAddress: "pourmemore.tapiov.net",
 	tileSize: 16,
 	tileGap: 0,
 	debug: false,

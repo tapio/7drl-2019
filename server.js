@@ -1,5 +1,5 @@
 #!/usr/bin/env node
-var PORT = parseInt(process.env.PORT, 10) || 10666;
+var PORT = parseInt(process.env.PORT, 10) || 10667;
 var VERBOSITY = parseInt(process.env.VERBOSE, 10) || 1;
 const WebSocket = require('ws');
 
