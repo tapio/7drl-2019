@@ -145,6 +145,15 @@ var TILES = {
 		tileCoords: [ 7, 8 ], walkable: true, transparent: true,
 		desc: "Marble floor"
 	},
+	floor_stones_big: {
+		tileCoords: [ 5, 6 ], walkable: true, transparent: true,
+		desc: "Stone floor"
+	},
+	floor_stones: {
+		tileCoords: [ 6, 6 ], walkable: true, transparent: true,
+		desc: "Stone floor"
+	},
+
 	wall_stone: {
 		tileCoords: [ 2, 5 ], walkable: false, transparent: false,
 		desc: "Stone wall"
@@ -174,7 +183,7 @@ var TILES = {
 		desc: "Old stone wall"
 	},
 	wall_bricks: {
-		tileCoords: [ 1, 5 ], walkable: false, transparent: false,
+		tileCoords: [ 4, 4 ], walkable: false, transparent: false,
 		desc: "Brick wall"
 	},
 	wall_mossy: {
@@ -714,12 +723,11 @@ var SOUNDS = {
 var LEVELS = [
 	{
 		name: "Level 1",
-		desc: "The Pranching Pony",
+		desc: "Easy peasy",
 		generator: "inn",
 		width: 16,
 		height: 12,
 		wall: [ TILES.wall_logs ],
-		XXXfloor: [ TILES.floor_dirt_a, TILES.floor_dirt_b, TILES.floor_dirt_c, TILES.floor_dirt_d ],
 		floor: [ TILES.floor_dirt_dunes ],
 		table: [ TILES.table_worn ],
 		counter: [ TILES.counter ],
@@ -734,15 +742,15 @@ var LEVELS = [
 		food: [ TILES.stew ]
 	},{
 		name: "Level 2",
-		desc: "The Pranching Pony",
+		desc: "Little league",
 		generator: "inn",
 		width: 16,
 		height: 15,
 		wall: [ TILES.wall_stone_old ],
-		floor: [ TILES.floor_cobblestone, TILES.floor_cobblestone ],
-		table: [ TILES.table ],
+		floor: [ TILES.floor_wood ],
+		table: [ TILES.table_worn ],
 		counter: [ TILES.counter ],
-		chair: [ TILES.chair_left, TILES.chair_right ],
+		chair: [ TILES.chair_worn_left, TILES.chair_worn_right ],
 		decor: [ TILES.cupboard, TILES.pot ],
 		decorAmount: 10,
 		mobs: [ MOBS.patron_male_a, MOBS.patron_female_a, MOBS.patron_male_b, MOBS.patron_female_b, MOBS.patron_male_c, MOBS.patron_female_c ],
@@ -753,12 +761,12 @@ var LEVELS = [
 		food: [ TILES.chicken, TILES.stew ]
 	},{
 		name: "Level 3",
-		desc: "The Pranching Pony",
+		desc: "Big league",
 		generator: "inn",
 		width: 20,
 		height: 15,
-		wall: [ TILES.wall_stone2 ],
-		floor: [ TILES.floor_marble_a, TILES.floor_marble_b, TILES.floor_marble_c, TILES.floor_marble_d ],
+		wall: [ TILES.wall_bricks ],
+		floor: [ TILES.floor_cobblestone ],
 		table: [ TILES.table ],
 		counter: [ TILES.counter ],
 		chair: [ TILES.chair_left, TILES.chair_right ],
@@ -772,10 +780,10 @@ var LEVELS = [
 		food: [ TILES.chicken, TILES.fish ]
 	},{
 		name: "Level 4",
-		desc: "The Pranching Pony",
+		desc: "Master class",
 		generator: "inn",
 		width: 20,
-		height: 15,
+		height: 18,
 		wall: [ TILES.wall_stone2 ],
 		floor: [ TILES.floor_marble_a, TILES.floor_marble_b, TILES.floor_marble_c, TILES.floor_marble_d ],
 		table: [ TILES.table ],
@@ -788,7 +796,7 @@ var LEVELS = [
 		items: [ ],
 		itemAmount: 0,
 		drinks: [ TILES.beer, TILES.wine, TILES.champagne, TILES.booze ],
-		food: [ TILES.chicken, TILES.fish ]
+		food: [ TILES.meat, TILES.chicken, TILES.fish ]
 	}
 ];
 
