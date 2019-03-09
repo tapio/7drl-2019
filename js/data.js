@@ -1,4 +1,5 @@
 var CONFIG = {
+	serverAddress: "saluuna.dy.fi:10666",
 	tileSize: 16,
 	tileGap: 0,
 	debug: false,

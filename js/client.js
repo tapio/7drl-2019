@@ -2,7 +2,7 @@ function Client(params) {
 	this.actor = params.actor || null;
 	this.connected = false;
 	var protocol = window.location.protocol === 'http:' ? 'ws://' : 'wss://';
-	var server = params.server || protocol + window.location.hostname + ":10666";
+	var server = params.server ? protocol + params.server : (protocol + window.location.hostname + ":10666");
 	ui.msg("Connecting to " + server + "...");
 	this.socket = new WebSocket(server);
 	this.ping = Infinity;

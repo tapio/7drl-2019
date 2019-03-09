@@ -201,6 +201,7 @@ function UI(player) {
 		}
 		if (ui.hostingChoice !== "solo") {
 			var clientParams = {
+				server: CONFIG.serverAddress,
 				host: CONFIG.host,
 				join: ui.hostingChoice !== "host-only",
 				game: ui.gameName,
