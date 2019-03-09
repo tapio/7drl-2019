@@ -1,17 +1,5 @@
 
 @font-face {
-	font-family: 'kenney_miniregular';
-	src: url('kenney_mini-webfont.eot');
-	src: url('kenney_mini-webfont.eot?#iefix') format('embedded-opentype'),
-		 url('kenney_mini-webfont.woff2') format('woff2'),
-		 url('kenney_mini-webfont.woff') format('woff'),
-		 url('kenney_mini-webfont.ttf') format('truetype'),
-		 url('kenney_mini-webfont.svg#kenney_miniregular') format('svg');
-	font-weight: normal;
-	font-style: normal;
-}
-
-@font-face {
 	font-family: 'CompassPro';
 	src: url('CompassPro.eot');
 	src: url('CompassPro.eot?#iefix') format('embedded-opentype'),
