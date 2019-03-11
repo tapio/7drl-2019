@@ -188,22 +188,14 @@ Dungeon.prototype.animate = function(dt) {
 			}
 			var duration = actor === ui.actor ? CONFIG.playerMoveDuration : CONFIG.enemyMoveDuration;
 			var speed = (1000 / duration) * dt;
-			var length = dist(0, 0, dx, dy);
 			if (Math.abs(dx) <= speed)
 				actor.animPos[0] = actor.pos[0];
 			else
-				actor.animPos[0] += dx / length * speed;
+				actor.animPos[0] += Math.sign(dx) * speed;
 			if (Math.abs(dy) <= speed)
 				actor.animPos[1] = actor.pos[1];
 			else
-				actor.animPos[1] += dy / length * speed;
-			/*if (Math.abs(dx) < 0.001 && Math.abs(dy) < 0.001) {
-				actor.animPos[0] = actor.pos[0];
-				actor.animPos[1] = actor.pos[1];
-			} else {
-				actor.animPos[0] += dx * 0.1;
-				actor.animPos[1] += dy * 0.1;
-			}*/
+				actor.animPos[1] += Math.sign(dy) * speed;
 			actor.animTime += 1000 * dt;
 			var anim = actor.tile.anim;
 			if (anim && anim.length && actor.animTime >= CONFIG.animFrameDuration) {
@@ -241,8 +233,8 @@ Dungeon.prototype.draw = function(camera, display, player) {
 		);
 	}
 
-	for (var j = 0; j < h; ++j) {
-		for (var i = 0; i < w; ++i) {
+	for (var j = -1; j <= h; ++j) { // Render extra borders for smooth scrolling
+		for (var i = -1; i <= w; ++i) {
 			var x = i + camera.pos[0];
 			var y = j + camera.pos[1];
 			var k = x + y * this.width;

@@ -11,7 +11,7 @@ function Actor(x, y, def) {
 	this.tile = def.ch ? clone(TILES.tileArray[def.ch]) : clone(TILES.player_female);
 	this.path = [];
 	this.fov = [];
-	this.vision = def.vision || 8;
+	this.vision = def.vision || 25;
 	this.speed = def.speed || 1;
 	this.health = def.health || 3;
 	this.maxHealth = this.health;
@@ -49,7 +49,7 @@ Actor.prototype.visibility = function(x, y) {
 	var dungeon = world.dungeon;
 	if (x < 0 || y < 0 || x >= dungeon.width || y >= dungeon.height)
 		return false;
-	return true;
+	return 1;
 	//return this.fov[x + y * world.dungeon.width];
 };
 

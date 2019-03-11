@@ -358,7 +358,7 @@ UI.prototype.onKeyUp = function(e) {
 UI.prototype.resetDisplay = function() {
 	var w = Math.floor(document.documentElement.clientWidth / CONFIG.tileSize / SETTINGS.tileMag);
 	var h = Math.floor(document.documentElement.clientHeight / CONFIG.tileSize / SETTINGS.tileMag);
-	camera = { pos: [0, 0], offset: [0, 0], center: [(w/2)|0, (h/2)|0] };
+	camera = { pos: [0, 0], offset: [0, 0], center: [(w/2)|0, (h/2)|0], w: w, h: h };
 
 	if (this.display)
 		document.body.removeChild(this.display.getContainer());
@@ -499,13 +499,16 @@ UI.prototype.render = function(camera, dungeon) {
 		});
 		return;
 	}
-	var xFits = dungeon.width <= camera.center[0] * 2;
-	var yFits = dungeon.height <= camera.center[1] * 2;
+	// Static viewport if everything fits the screen, otherwise follow player
+	var xFits = dungeon.width <= camera.w;
+	var yFits = dungeon.height <= camera.h;
 	var refX = xFits ? ((dungeon.width / 2)|0) : this.actor.pos[0];
 	var refY = yFits ? ((dungeon.height / 2)|0) : this.actor.pos[1];
 
 	camera.pos[0] = refX - camera.center[0];
 	camera.pos[1] = refY - camera.center[1];
+
+	// Calculate offset for animation
 	if (this.actor.moved) {
 		camera.offset[0] = xFits ? 0 : (this.actor.pos[0] - this.actor.animPos[0]);
 		camera.offset[1] = yFits ? 0 : (this.actor.pos[1] - this.actor.animPos[1]);
@@ -513,6 +516,29 @@ UI.prototype.render = function(camera, dungeon) {
 		camera.offset[0] = 0;
 		camera.offset[1] = 0;
 	}
+
+	// Clamp to borders to always maximize visible area
+	if (!xFits) {
+		if (camera.pos[0] - camera.offset[0] < 0) {
+			camera.pos[0] = 0;
+			camera.offset[0] = 0;
+		}
+		if (camera.pos[0] + camera.w - camera.offset[0] >= dungeon.width) {
+			camera.pos[0] = dungeon.width - camera.w;
+			camera.offset[0] = 0;
+		}
+	}
+	if (!yFits) {
+		if (camera.pos[1] - camera.offset[1] < 0) {
+			camera.pos[1] = 0;
+			camera.offset[1] = 0;
+		}
+		if (camera.pos[1] + camera.h - camera.offset[1] >= dungeon.height) {
+			camera.pos[1] = dungeon.height - camera.h;
+			camera.offset[1] = 0;
+		}
+	}
+
 	world.dungeon.draw(camera, this.display, this.actor);
 };
 
