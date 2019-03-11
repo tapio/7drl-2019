@@ -9,6 +9,7 @@ function Game() {
 	this.reputation = 0;
 	this.timeLeft = 0;
 	this.timeSinceSpawn = 0;
+	this.timeSinceTimeSync = 0;
 	this.reset();
 
 	this.cmdProcessors = {
@@ -53,6 +54,7 @@ Game.prototype.reset = function() {
 	this.reputation = 0;
 	this.timeLeft = GAMECONFIG.dayDuration;
 	this.timeSinceSpawn = 5; // Spawn sooner the first time
+	this.timeSinceTimeSync = 0;
 };
 
 Game.prototype.calculateStars = function() {
@@ -93,6 +95,11 @@ Game.prototype.update = function(dt) {
 			this.cmd(this.spawnMob, pos, mobDef);
 		}
 	}
+
+	this.timeSinceTimeSync += dt;
+	if (this.timeSinceTimeSync > 3) {
+		this.cmd(this.setTimeLeft, this.timeLeft);
+	}
 };
 
 Game.prototype.spawnMob = function spawnMob(pos, def) {
@@ -107,6 +114,16 @@ Game.prototype.addGold = function addGold(amount) {
 
 Game.prototype.addReputation = function addReputation(amount) {
 	this.reputation += amount;
+};
+
+Game.prototype.setTimeLeft = function setTimeLeft(timeLeft) {
+	this.timeLeft = timeLeft;
+	this.timeSinceTimeSync = 0;
+};
+
+Game.prototype.setResult = function setResult(gold, reputation) {
+	this.gold = gold;
+	this.reputation = reputation;
 };
 
 Game.prototype.removeItem = function removeItem(x, y) {

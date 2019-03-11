@@ -39,9 +39,15 @@ World.prototype.update = function(dt) {
 	if (!this.running)
 		return;
 	this.dungeon.animate(dt);
-	if (Date.now() < this.roundTimer || !this.dungeon.actors.length)
+
+	if (!this.dungeon.actors.length)
 		return;
-	game.update(CONFIG.roundDelay / 1000);
+
+	game.update(dt);
+
+	if (Date.now() < this.roundTimer)
+		return;
+
 	var actors = this.dungeon.actors;
 	for (var i = 0, l = actors.length; i < l; i++) {
 		var currentActor = actors[i];
