@@ -44,7 +44,7 @@ Player.prototype.leave = function() {
 			console.log("Deleting empty game " + this.game.id);
 		delete games[this.game.id];
 	} else if (VERBOSITY > 0)
-		console.log("Players left in " + this.game.id + ": " + this.game.numPlayers);
+		console.log("Players remaining in " + this.game.id + ": " + this.game.numPlayers);
 
 	delete this.game; // Remove cached game reference
 };
