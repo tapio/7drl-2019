@@ -27,7 +27,7 @@ function Player(socket, id, game) {
 
 Player.prototype.join = function(game) {
 	if (!this.id) return; // Id is required
-	if (this.game && this.game == games[game)
+	if (this.game && this.game == games[game])
 		return; // Already somehow joined
 	this.leave(); // Leave if already in game
 	this.game = games[game]; // Cache reference
