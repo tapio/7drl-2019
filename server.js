@@ -64,7 +64,12 @@ server.on('connection', function(ws) {
 
 	ws.on('message', function(msg) {
 		if (VERBOSITY > 1) console.log("Received: " + msg);
-		msg = JSON.parse(msg);
+		try {
+			msg = JSON.parse(msg);
+		} catch (e) {
+			console.log(e.toString());
+			return;
+		}
 		switch (msg.type) {
 			// Create game
 			case "create":
