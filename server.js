@@ -27,6 +27,8 @@ function Player(socket, id, game) {
 
 Player.prototype.join = function(game) {
 	if (!this.id) return; // Id is required
+	if (this.game && this.game == games[game)
+		return; // Already somehow joined
 	this.leave(); // Leave if already in game
 	this.game = games[game]; // Cache reference
 	this.game.players[this.id] = this; // Join
@@ -37,8 +39,13 @@ Player.prototype.leave = function() {
 	if (!this.game) return; // Nothing to do if not in game
 	delete this.game.players[this.id]; // Leave the game
 	this.game.numPlayers--;
-	//if (this.game.numPlayers == 0)
-	//	delete games[this.game.id];
+	if (this.game.numPlayers == 0) {
+		if (VERBOSITY > 0)
+			console.log("Deleting empty game " + this.game.id);
+		delete games[this.game.id];
+	} else if (VERBOSITY > 0)
+		console.log("Players left in " + this.game.id + ": " + this.game.numPlayers);
+
 	delete this.game; // Remove cached game reference
 };
 
